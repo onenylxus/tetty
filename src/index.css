@@ -1,0 +1,25 @@
+:root {
+  --color-white: #f8f8f8;
+  --color-light-gray: #d0d0d0;
+  --color-gray: #808080;
+  --color-dark-gray: #404040;
+  --color-black: #161616;
+  --color-red: #d04040;
+  --color-orange: #d08040;
+  --color-yellow: #d0d040;
+  --color-green: #40d040;
+  --color-cyan: #40d0d0;
+  --color-blue: #4040d0;
+  --color-purple: #8040d0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  width: 100vw;
+  height: 100vh;
+}
