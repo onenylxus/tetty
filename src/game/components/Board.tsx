@@ -1,10 +1,10 @@
 // Import
-import { BoardType } from '../types';
+import { BoardMatrix } from '../types';
 import Cell from './Cell';
 
 // Board props
 interface Props {
-  board: BoardType;
+  board: BoardMatrix;
 }
 
 // Board component
