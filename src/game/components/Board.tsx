@@ -4,15 +4,15 @@ import Cell from './Cell';
 
 // Board props
 interface Props {
-  board: BoardMatrix;
+  matrix: BoardMatrix;
 }
 
 // Board component
-const Board = ({ board }: Props) => {
+const Board = ({ matrix }: Props) => {
   // Return
   return (
     <div className="board">
-      {board.map((row, j) => (
+      {matrix.map((row, j) => (
         <div className="row" key={`${j}`}>
           {row.map((cell, i) => (
             <Cell cellType={cell} key={`${j}-${i}`} />
