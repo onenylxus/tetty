@@ -1,6 +1,6 @@
 // Import
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardState } from '../types';
+import { BlockType, BoardAction, BoardMatrix, BoardState } from '../types';
 import Shapes from '../constants/shapes';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
 import getRandomBlock from '../functions/getRandomBlock';
@@ -40,7 +40,13 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       break;
 
     case 'commit':
-      break;
+      return {
+        matrix: action.matrix as BoardMatrix,
+        dropRow: 0,
+        dropColumn: 3,
+        dropBlock: state.dropBlock,
+        dropShape: state.dropShape,
+      };
 
     case 'move':
       break;

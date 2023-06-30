@@ -14,7 +14,7 @@ const useInterval = (callback: () => void, delta: number): void => {
       return;
     }
 
-    const intervalId = setInterval(callbackRef.current, delta);
+    const intervalId = setInterval(() => callbackRef.current(), delta);
     return () => clearInterval(intervalId);
   }, [delta]);
 };
