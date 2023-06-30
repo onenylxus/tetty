@@ -44,8 +44,8 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         matrix: action.matrix as BoardMatrix,
         dropRow: 0,
         dropColumn: 3,
-        dropBlock: state.dropBlock,
-        dropShape: state.dropShape,
+        dropBlock: action.next as BlockType,
+        dropShape: Shapes[action.next as BlockType],
       };
 
     case 'move':

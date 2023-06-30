@@ -36,4 +36,5 @@ export type BoardState = {
 export type BoardAction = {
   type: 'start' | 'drop' | 'commit' | 'move';
   matrix?: BoardMatrix;
+  next?: BlockType;
 };
