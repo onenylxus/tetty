@@ -1,9 +1,11 @@
 // Import
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardMatrix, BoardState } from '../types';
+import { BlockType, BoardAction, BoardMatrix, BoardState, Shape } from '../types';
 import Shapes from '../constants/shapes';
+import collides from '../functions/collides';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
 import getRandomBlock from '../functions/getRandomBlock';
+import rotateShape from '../functions/rotateShape';
 
 // Initialize argument
 const initState: BoardState = {
@@ -23,6 +25,8 @@ const initFn = (emptyState: BoardState): BoardState => {
 const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
   const newState: BoardState = { ...state };
   let firstBlock: BlockType;
+  let newShape: Shape;
+  let columnOffset: number;
 
   switch (action.type) {
     case 'start':
@@ -49,6 +53,12 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       };
 
     case 'move':
+      newShape = action.rotate ? rotateShape(newState.dropShape) : newState.dropShape;
+      columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
+      if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn + columnOffset)) {
+        newState.dropColumn += columnOffset;
+        newState.dropShape = newShape;
+      }
       break;
 
     default:

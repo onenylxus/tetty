@@ -1,5 +1,5 @@
 // Import
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BlockType, BoardMatrix } from '../types';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
@@ -53,6 +53,67 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       dispatchBoardState({ type: 'drop' });
     }
   }, [commit, dispatchBoardState, dropColumn, dropRow, dropShape, matrix, isSliding]);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    let moveLeft = false;
+    let moveRight = false;
+    let moveIntervalId: number | undefined;
+
+    const updateMoveInterval = () => {
+      clearInterval(moveIntervalId);
+      dispatchBoardState({ type: 'move', moveLeft, moveRight });
+      moveIntervalId = setInterval(() => {
+        dispatchBoardState({ type: 'move', moveLeft, moveRight });
+      }, 100);
+    };
+
+    const onkeydown = (event: KeyboardEvent): void => {
+      if (event.repeat) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        moveLeft = true;
+        updateMoveInterval();
+      }
+      if (event.key === 'ArrowRight') {
+        moveRight = true;
+        updateMoveInterval();
+      }
+      if (event.key === 'ArrowUp') {
+        dispatchBoardState({ type: 'move', rotate: true });
+      }
+      if (event.key === 'ArrowDown') {
+        setTickSpeed(50);
+      }
+    };
+
+    const onkeyup = (event: KeyboardEvent): void => {
+      if (event.key === 'ArrowLeft') {
+        moveLeft = false;
+        updateMoveInterval();
+      }
+      if (event.key === 'ArrowRight') {
+        moveRight = false;
+        updateMoveInterval();
+      }
+      if (event.key === 'ArrowDown') {
+        setTickSpeed(800);
+      }
+    };
+
+    document.addEventListener('keydown', onkeydown);
+    document.addEventListener('keyup', onkeyup);
+
+    return () => {
+      document.removeEventListener('keydown', onkeydown);
+      document.removeEventListener('keyup', onkeyup);
+    };
+  }, [active]);
 
   useInterval(() => {
     if (active) {
