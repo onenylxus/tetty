@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { BlockType, BoardMatrix, EmptyType } from '../types';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
+import Dimensions from '../constants/dimensions';
+import Shapes from '../constants/shapes';
 import addShape from '../functions/addShape';
 import collides from '../functions/collides';
 import getRandomBlock from '../functions/getRandomBlock';
@@ -16,6 +18,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
 
   const [{ matrix, dropRow, dropColumn, dropBlock, dropShape }, dispatchBoardState] = useBoard();
 
+  // Start function
   const start = useCallback(() => {
     setActive(true);
     setTickSpeed(800);
@@ -23,29 +26,41 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     dispatchBoardState({ type: 'start' });
   }, [dispatchBoardState]);
 
+  // Commit function
   const commit = useCallback(() => {
+    // Leave sliding state
     if (!collides(matrix, dropShape, dropRow + 1, dropColumn)) {
       setTickSpeed(800);
       setIsSliding(false);
       return;
     }
 
+    // Add shape to matrix
     const matrixCommit: BoardMatrix = structuredClone(matrix);
     addShape(matrixCommit, dropBlock, dropShape, dropRow, dropColumn);
 
+    // Clear rows if full
     let clearedRows = 0;
-    for (let j = 19; j >= 0; j--) { // matrix height 24 with buffer
+    for (let j = Dimensions.Height; j >= 0; j--) {
       if (matrixCommit[j].every((cell) => cell !== EmptyType.Empty)) {
         clearedRows++;
         matrixCommit.splice(j, 1);
       }
     }
 
+    // Update next queue
     const newNextQueue: BlockType[] = structuredClone(nextQueue);
     const nextBlock: BlockType = newNextQueue.pop() as BlockType;
     newNextQueue.unshift(getRandomBlock());
 
-    setTickSpeed(800);
+    // Detect top out
+    if (collides(matrixCommit, Shapes[nextBlock], 0, 3)) {
+      setActive(false);
+      setTickSpeed(-1);
+    } else {
+      setTickSpeed(800);
+    }
+
     setIsSliding(false);
     setNextQueue(newNextQueue);
     dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
@@ -71,6 +86,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     let moveRight = false;
     let moveIntervalId: number | undefined;
 
+    // Update move interval function
     const updateMoveInterval = () => {
       clearInterval(moveIntervalId);
       dispatchBoardState({ type: 'move', moveLeft, moveRight });
@@ -79,6 +95,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       }, 100);
     };
 
+    // Key down event
     const onkeydown = (event: KeyboardEvent): void => {
       if (event.repeat) {
         return;
@@ -99,6 +116,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       }
     };
 
+    // Key up event
     const onkeyup = (event: KeyboardEvent): void => {
       if (event.key === 'ArrowLeft') {
         moveLeft = false;
@@ -122,12 +140,14 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     };
   }, [active, dispatchBoardState]);
 
+  // Update
   useInterval(() => {
     if (active) {
       update();
     }
   }, tickSpeed);
 
+  // Display current matrix with dropping block
   const matrixDisplay: BoardMatrix = structuredClone(matrix);
   if (active) {
     addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
