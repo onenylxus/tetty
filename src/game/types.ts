@@ -38,6 +38,7 @@ export type BoardAction = {
   moveLeft?: boolean;
   moveRight?: boolean;
   rotate?: boolean;
+  hardDrop?: boolean;
   matrix?: BoardMatrix;
   next?: BlockType;
 };

@@ -54,11 +54,18 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       };
 
     case 'move':
-      newShape = action.rotate ? rotateShape(newState.dropShape) : newState.dropShape;
-      columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
-      if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn + columnOffset)) {
-        newState.dropColumn += columnOffset;
-        newState.dropShape = newShape;
+      if (action.hardDrop) {
+        while (!collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)) {
+          newState.dropRow++;
+        }
+      }
+      else {
+        newShape = action.rotate ? rotateShape(newState.dropShape) : newState.dropShape;
+        columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
+        if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn + columnOffset)) {
+          newState.dropColumn += columnOffset;
+          newState.dropShape = newShape;
+        }
       }
       break;
 

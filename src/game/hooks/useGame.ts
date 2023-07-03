@@ -41,7 +41,8 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
 
     // Clear rows if full
     let clearedRows = 0;
-    for (let j = Dimensions.Height; j >= 0; j--) {
+    console.log(matrixCommit);
+    for (let j = Dimensions.Height - 1; j >= 0; j--) {
       if (matrixCommit[j].every((cell) => cell !== EmptyType.Empty)) {
         clearedRows++;
         matrixCommit.splice(j, 1);
@@ -113,6 +114,10 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       }
       if (event.key === 'ArrowDown') {
         setTickSpeed(50);
+      }
+      if (event.key === ' ') {
+        dispatchBoardState({ type: 'move', hardDrop: true });
+        setTickSpeed(0);
       }
     };
 
