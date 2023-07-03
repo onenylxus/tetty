@@ -1,6 +1,6 @@
 // Import
 import { useCallback, useEffect, useState } from 'react';
-import { BlockType, BoardMatrix } from '../types';
+import { BlockType, BoardMatrix, EmptyType } from '../types';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
 import addShape from '../functions/addShape';
@@ -32,6 +32,14 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
 
     const matrixCommit: BoardMatrix = structuredClone(matrix);
     addShape(matrixCommit, dropBlock, dropShape, dropRow, dropColumn);
+
+    let clearedRows = 0;
+    for (let j = 19; j >= 0; j--) { // matrix height 24 with buffer
+      if (matrixCommit[j].every((cell) => cell !== EmptyType.Empty)) {
+        clearedRows++;
+        matrixCommit.splice(j, 1);
+      }
+    }
 
     const newNextQueue: BlockType[] = structuredClone(nextQueue);
     const nextBlock: BlockType = newNextQueue.pop() as BlockType;
@@ -75,7 +83,6 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       if (event.repeat) {
         return;
       }
-
       if (event.key === 'ArrowLeft') {
         moveLeft = true;
         updateMoveInterval();
@@ -113,7 +120,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       document.removeEventListener('keydown', onkeydown);
       document.removeEventListener('keyup', onkeyup);
     };
-  }, [active]);
+  }, [active, dispatchBoardState]);
 
   useInterval(() => {
     if (active) {

@@ -1,6 +1,7 @@
 // Import
 import { Dispatch, useReducer } from 'react';
 import { BlockType, BoardAction, BoardMatrix, BoardState, Shape } from '../types';
+import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import collides from '../functions/collides';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
@@ -45,7 +46,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
 
     case 'commit':
       return {
-        matrix: action.matrix as BoardMatrix,
+        matrix: [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix],
         dropRow: 0,
         dropColumn: 3,
         dropBlock: action.next as BlockType,

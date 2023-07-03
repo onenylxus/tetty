@@ -1,11 +1,11 @@
 // Import
 import { BoardMatrix, EmptyType } from '../types';
+import Dimensions from '../constants/dimensions';
 
 // Get empty matrix function
-const getEmptyMatrix = (): BoardMatrix => {
+const getEmptyMatrix = (height: number = Dimensions.Height): BoardMatrix => {
   const width = 10;
-  const height = 20; // 24 with buffer
-  return [...Array(height).keys()].map(() => Array(width).fill(EmptyType.Empty));
+  return [...Array(height).keys()].map(() => Array(Dimensions.Width).fill(EmptyType.Empty));
 };
 
 // Export
