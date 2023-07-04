@@ -5,7 +5,6 @@ import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import collides from '../functions/collides';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
-import getRandomBlock from '../functions/getRandomBlock';
 import rotateShape from '../functions/rotateShape';
 
 // Initialize argument
@@ -31,7 +30,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
 
   switch (action.type) {
     case 'start':
-      firstBlock = getRandomBlock();
+      firstBlock = action.next as BlockType;
       return {
         matrix: getEmptyMatrix(),
         dropRow: 0,

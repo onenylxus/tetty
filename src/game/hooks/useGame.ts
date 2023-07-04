@@ -7,7 +7,7 @@ import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import addShape from '../functions/addShape';
 import collides from '../functions/collides';
-import getRandomBlock from '../functions/getRandomBlock';
+import getSevenBag from '../functions/getSevenBag';
 
 // Use game hook
 const useGame = (): [BoardMatrix, () => void, boolean] => {
@@ -22,8 +22,11 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
   const start = useCallback(() => {
     setActive(true);
     setTickSpeed(800);
-    setNextQueue([0, 0, 0, 0, 0].map(() => getRandomBlock()));
-    dispatchBoardState({ type: 'start' });
+
+    const firstBag: BlockType[] = getSevenBag();
+    const firstBlock: BlockType = firstBag.pop() as BlockType;
+    setNextQueue(firstBag);
+    dispatchBoardState({ type: 'start', next: firstBlock });
   }, [dispatchBoardState]);
 
   // Commit function
@@ -52,7 +55,9 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     // Update next queue
     const newNextQueue: BlockType[] = structuredClone(nextQueue);
     const nextBlock: BlockType = newNextQueue.pop() as BlockType;
-    newNextQueue.unshift(getRandomBlock());
+    if (newNextQueue.length < 7) {
+      newNextQueue.unshift(...getSevenBag());
+    }
 
     // Detect top out
     if (collides(matrixCommit, Shapes[nextBlock], 0, 3)) {
