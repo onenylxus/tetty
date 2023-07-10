@@ -59,7 +59,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         }
       }
       else {
-        newShape = action.rotate ? rotateShape(newState.dropShape) : newState.dropShape;
+        newShape = action.rotate ? rotateShape(newState.dropShape, action.rotate) : newState.dropShape;
         columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
         if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn + columnOffset)) {
           newState.dropColumn += columnOffset;

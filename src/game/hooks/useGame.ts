@@ -1,6 +1,6 @@
 // Import
 import { useCallback, useEffect, useState } from 'react';
-import { BlockType, BoardMatrix, EmptyType } from '../types';
+import { BlockType, BoardMatrix, EmptyType, Rotation } from '../types';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
 import Dimensions from '../constants/dimensions';
@@ -106,21 +106,27 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       if (event.repeat) {
         return;
       }
-      if (event.key === 'ArrowLeft') {
+      if (event.code === 'ArrowLeft') {
         moveLeft = true;
         updateMoveInterval();
       }
-      if (event.key === 'ArrowRight') {
+      if (event.code === 'ArrowRight') {
         moveRight = true;
         updateMoveInterval();
       }
-      if (event.key === 'ArrowUp') {
-        dispatchBoardState({ type: 'move', rotate: true });
+      if (event.code === 'ControlLeft' || event.code === 'KeyZ') {
+        dispatchBoardState({ type: 'move', rotate: Rotation.Left });
       }
-      if (event.key === 'ArrowDown') {
+      if (event.code === 'ArrowUp' || event.code === 'KeyX') {
+        dispatchBoardState({ type: 'move', rotate: Rotation.Right });
+      }
+      if (event.code === 'KeyA') {
+        dispatchBoardState({ type: 'move', rotate: Rotation.Double });
+      }
+      if (event.code === 'ArrowDown') {
         setTickSpeed(50);
       }
-      if (event.key === ' ') {
+      if (event.code === 'Space') {
         dispatchBoardState({ type: 'move', hardDrop: true });
         setTickSpeed(0);
       }
@@ -128,15 +134,15 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
 
     // Key up event
     const onkeyup = (event: KeyboardEvent): void => {
-      if (event.key === 'ArrowLeft') {
+      if (event.code === 'ArrowLeft') {
         moveLeft = false;
         updateMoveInterval();
       }
-      if (event.key === 'ArrowRight') {
+      if (event.code === 'ArrowRight') {
         moveRight = false;
         updateMoveInterval();
       }
-      if (event.key === 'ArrowDown') {
+      if (event.code === 'ArrowDown') {
         setTickSpeed(800);
       }
     };

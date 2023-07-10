@@ -20,6 +20,13 @@ export type CellType = BlockType | EmptyType;
 // Shape type
 export type Shape = boolean[][];
 
+// Rotation type
+export enum Rotation {
+  Left = 'l',
+  Right = 'r',
+  Double = 'd',
+}
+
 // Board matrix type
 export type BoardMatrix = CellType[][];
 
@@ -37,7 +44,7 @@ export type BoardAction = {
   type: 'start' | 'drop' | 'commit' | 'move';
   moveLeft?: boolean;
   moveRight?: boolean;
-  rotate?: boolean;
+  rotate?: Rotation;
   hardDrop?: boolean;
   matrix?: BoardMatrix;
   next?: BlockType;
