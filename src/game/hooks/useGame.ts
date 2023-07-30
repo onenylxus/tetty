@@ -13,6 +13,7 @@ import getSevenBag from '../functions/getSevenBag';
 const useGame = (): [BoardMatrix, () => void, boolean] => {
   const [active, setActive] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(-1);
+  const [isHardDrop, setIsHardDrop] = useState(false);
   const [isSliding, setIsSliding] = useState(false);
   const [nextQueue, setNextQueue] = useState<BlockType[]>([]);
 
@@ -31,8 +32,8 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
 
   // Commit function
   const commit = useCallback(() => {
-    // Leave sliding state
-    if (!collides(matrix, dropShape, dropRow + 1, dropColumn)) {
+    // Leave sliding state except hard drop action performed
+    if (!isHardDrop && !collides(matrix, dropShape, dropRow + 1, dropColumn)) {
       setTickSpeed(800);
       setIsSliding(false);
       return;
@@ -43,11 +44,8 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     addShape(matrixCommit, dropBlock, dropShape, dropRow, dropColumn);
 
     // Clear rows if full
-    let clearedRows = 0;
-    console.log(matrixCommit);
     for (let j = Dimensions.Height - 1; j >= 0; j--) {
       if (matrixCommit[j].every((cell) => cell !== EmptyType.Empty)) {
-        clearedRows++;
         matrixCommit.splice(j, 1);
       }
     }
@@ -67,10 +65,11 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       setTickSpeed(800);
     }
 
+    setIsHardDrop(false);
     setIsSliding(false);
     setNextQueue(newNextQueue);
     dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
-  }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, matrix, nextQueue]);
+  }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, matrix, nextQueue]);
 
   const update = useCallback(() => {
     if (isSliding) {
@@ -129,6 +128,7 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
       if (event.code === 'Space') {
         dispatchBoardState({ type: 'move', hardDrop: true });
         setTickSpeed(0);
+        setIsHardDrop(true);
       }
     };
 
