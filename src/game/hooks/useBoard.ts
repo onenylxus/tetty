@@ -34,7 +34,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       return {
         matrix: getEmptyMatrix(),
         dropRow: 0,
-        dropColumn: 3,
+        dropColumn: firstBlock === BlockType.O ? 4 : 3,
         dropBlock: firstBlock,
         dropShape: Shapes[firstBlock],
       };
@@ -47,7 +47,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       return {
         matrix: [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix],
         dropRow: 0,
-        dropColumn: 3,
+        dropColumn: action.next === BlockType.O ? 4 : 3,
         dropBlock: action.next as BlockType,
         dropShape: Shapes[action.next as BlockType],
       };
@@ -58,12 +58,16 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
           newState.dropRow++;
         }
       }
-      else {
-        newShape = action.rotate ? rotateShape(newState.dropShape, action.rotate) : newState.dropShape;
-        columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
-        if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn + columnOffset)) {
-          newState.dropColumn += columnOffset;
+      else if (action.rotate) {
+        newShape = rotateShape(newState.dropShape, action.rotate);
+        if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn)) {
           newState.dropShape = newShape;
+        }
+        newState.dropShape = newShape;
+      } else {
+        columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
+        if (!collides(newState.matrix, newState.dropShape, newState.dropRow, newState.dropColumn + columnOffset)) {
+          newState.dropColumn += columnOffset;
         }
       }
       break;
