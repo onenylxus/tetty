@@ -4,7 +4,7 @@ import { BoardMatrix, Shape, EmptyType } from '../types';
 // Collision detection function
 const collides = (matrix: BoardMatrix, dropShape: Shape, dropRow: number, dropColumn: number): boolean => {
   let result = false;
-  dropShape.filter((row) => row.some((cell) => cell)).forEach((row, j) => {
+  dropShape.forEach((row, j) => {
     row.forEach((cell, i) => {
       const u: number = dropColumn + i;
       const v: number = dropRow + j;

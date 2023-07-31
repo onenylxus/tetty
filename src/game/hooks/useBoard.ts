@@ -81,7 +81,6 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
           newRow = state.dropRow + srsOffsets[i][0];
           newColumn = state.dropColumn + srsOffsets[i][1];
           if (!collides(state.matrix, newShape, newRow, newColumn)) {
-            console.log([...srsOffsets[i]]);
             return {
               ...state,
               dropRow: newRow,
