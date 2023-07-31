@@ -20,11 +20,36 @@ export type CellType = BlockType | EmptyType;
 // Shape type
 export type Shape = boolean[][];
 
-// Rotation type
+// Rotation
 export enum Rotation {
-  Left = 'l',
-  Right = 'r',
-  Double = 'd',
+  Right = 1,
+  Double,
+  Left,
+}
+
+// Orientation
+export enum Orientation {
+  Zero,
+  Right,
+  Double,
+  Left,
+}
+
+// Super Rotation System (SRS) rotation
+export enum SRSRotation {
+  ZeroToRight,
+  RightToZero,
+  RightToDouble,
+  DoubleToRight,
+  DoubleToLeft,
+  LeftToDouble,
+  LeftToZero,
+  ZeroToLeft,
+}
+
+// Super Rotation System (SRS) offsets type
+export type SRSOffset = {
+  [key in SRSRotation]: number[][];
 }
 
 // Board matrix type
@@ -37,6 +62,7 @@ export type BoardState = {
   dropColumn: number;
   dropBlock: BlockType;
   dropShape: Shape;
+  dropOrientation: Orientation;
 };
 
 // Board action type

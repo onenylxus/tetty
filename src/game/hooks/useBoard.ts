@@ -1,8 +1,9 @@
 // Import
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardMatrix, BoardState, Shape } from '../types';
+import { BlockType, BoardAction, BoardMatrix, BoardState, Orientation, Rotation, SRSRotation, Shape } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
+import SRSOffsets from '../constants/srsOffsets';
 import collides from '../functions/collides';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
 import rotateShape from '../functions/rotateShape';
@@ -14,6 +15,7 @@ const initState: BoardState = {
   dropColumn: 0,
   dropBlock: BlockType.I,
   dropShape: Shapes.I,
+  dropOrientation: Orientation.Zero,
 };
 
 // Initialize function
@@ -23,10 +25,13 @@ const initFn = (emptyState: BoardState): BoardState => {
 
 // Board reducer
 const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
-  const newState: BoardState = { ...state };
   let firstBlock: BlockType;
+  let srsRotation: SRSRotation;
+  let srsOffsets: number[][];
+  let newRow: number;
+  let newColumn: number;
   let newShape: Shape;
-  let columnOffset: number;
+  let newOrientation: Orientation;
 
   switch (action.type) {
     case 'start':
@@ -37,11 +42,14 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         dropColumn: firstBlock === BlockType.O ? 4 : 3,
         dropBlock: firstBlock,
         dropShape: Shapes[firstBlock],
+        dropOrientation: Orientation.Zero,
       };
 
     case 'drop':
-      newState.dropRow++;
-      break;
+      return {
+        ...state,
+        dropRow: state.dropRow + 1,
+      };
 
     case 'commit':
       return {
@@ -50,33 +58,53 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         dropColumn: action.next === BlockType.O ? 4 : 3,
         dropBlock: action.next as BlockType,
         dropShape: Shapes[action.next as BlockType],
+        dropOrientation: Orientation.Zero,
       };
 
     case 'move':
       if (action.hardDrop) {
-        while (!collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)) {
-          newState.dropRow++;
+        while (!collides(state.matrix, state.dropShape, state.dropRow + 1, state.dropColumn)) {
+          state.dropRow++;
         }
       }
       else if (action.rotate) {
-        newShape = rotateShape(newState.dropShape, action.rotate);
-        if (!collides(newState.matrix, newShape, newState.dropRow, newState.dropColumn)) {
-          newState.dropShape = newShape;
+        newShape = rotateShape(state.dropShape, action.rotate);
+        newOrientation = (state.dropOrientation + action.rotate) % 4;
+        srsRotation = action.rotate !== Rotation.Double ? (state.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8 : 0;
+        srsOffsets = SRSOffsets[state.dropBlock][srsRotation];
+
+        for (let i = 0; i < srsOffsets.length; i++) {
+          if (action.rotate === Rotation.Double && i > 0) {
+            break;
+          }
+
+          newRow = state.dropRow + srsOffsets[i][0];
+          newColumn = state.dropColumn + srsOffsets[i][1];
+          if (!collides(state.matrix, newShape, newRow, newColumn)) {
+            console.log([...srsOffsets[i]]);
+            return {
+              ...state,
+              dropRow: newRow,
+              dropColumn: newColumn,
+              dropShape: newShape,
+              dropOrientation: newOrientation,
+            };
+          }
         }
-        newState.dropShape = newShape;
       } else {
-        columnOffset = action.moveLeft ? -1 : (action.moveRight ? 1 : 0);
-        if (!collides(newState.matrix, newState.dropShape, newState.dropRow, newState.dropColumn + columnOffset)) {
-          newState.dropColumn += columnOffset;
+        newColumn = state.dropColumn + (action.moveLeft ? -1 : (action.moveRight ? 1 : 0));
+        if (!collides(state.matrix, state.dropShape, state.dropRow, newColumn)) {
+          return {
+            ...state,
+            dropColumn: newColumn,
+          };
         }
       }
-      break;
+      return { ...state };
 
     default:
       throw new Error(`Invalid action type '${action.type}'`);
   }
-
-  return newState;
 };
 
 // Use board hook
