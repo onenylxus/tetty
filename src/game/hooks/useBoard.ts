@@ -25,6 +25,7 @@ const initFn = (emptyState: BoardState): BoardState => {
 
 // Board reducer
 const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
+  const newState: BoardState = { ...state };
   let firstBlock: BlockType;
   let srsRotation: SRSRotation;
   let srsOffsets: number[][];
@@ -46,10 +47,8 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       };
 
     case 'drop':
-      return {
-        ...state,
-        dropRow: state.dropRow + 1,
-      };
+      newState.dropRow++;
+      break;
 
     case 'commit':
       return {
@@ -63,47 +62,44 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
 
     case 'move':
       if (action.hardDrop) {
-        while (!collides(state.matrix, state.dropShape, state.dropRow + 1, state.dropColumn)) {
-          state.dropRow++;
+        while (!collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)) {
+          newState.dropRow++;
         }
       }
       else if (action.rotate) {
-        newShape = rotateShape(state.dropShape, action.rotate);
-        newOrientation = (state.dropOrientation + action.rotate) % 4;
-        srsRotation = action.rotate !== Rotation.Double ? (state.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8 : 0;
-        srsOffsets = SRSOffsets[state.dropBlock][srsRotation];
+        newShape = rotateShape(newState.dropShape, action.rotate);
+        newOrientation = (newState.dropOrientation + action.rotate) % 4;
+        srsRotation = action.rotate !== Rotation.Double ? (newState.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8 : 0;
+        srsOffsets = SRSOffsets[newState.dropBlock][srsRotation];
 
         for (let i = 0; i < srsOffsets.length; i++) {
           if (action.rotate === Rotation.Double && i > 0) {
             break;
           }
 
-          newRow = state.dropRow + srsOffsets[i][0];
-          newColumn = state.dropColumn + srsOffsets[i][1];
-          if (!collides(state.matrix, newShape, newRow, newColumn)) {
-            return {
-              ...state,
-              dropRow: newRow,
-              dropColumn: newColumn,
-              dropShape: newShape,
-              dropOrientation: newOrientation,
-            };
+          newRow = newState.dropRow + srsOffsets[i][0];
+          newColumn = newState.dropColumn + srsOffsets[i][1];
+          if (!collides(newState.matrix, newShape, newRow, newColumn)) {
+            newState.dropRow = newRow;
+            newState.dropColumn = newColumn;
+            newState.dropShape = newShape;
+            newState.dropOrientation = newOrientation;
+            break;
           }
         }
       } else {
-        newColumn = state.dropColumn + (action.moveLeft ? -1 : (action.moveRight ? 1 : 0));
-        if (!collides(state.matrix, state.dropShape, state.dropRow, newColumn)) {
-          return {
-            ...state,
-            dropColumn: newColumn,
-          };
+        newColumn = newState.dropColumn + (action.moveLeft ? -1 : (action.moveRight ? 1 : 0));
+        if (!collides(newState.matrix, newState.dropShape, newState.dropRow, newColumn)) {
+          newState.dropColumn = newColumn;
         }
       }
-      return { ...state };
+      break;
 
     default:
       throw new Error(`Invalid action type '${action.type}'`);
   }
+
+  return newState;
 };
 
 // Use board hook
