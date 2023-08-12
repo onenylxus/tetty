@@ -6,12 +6,12 @@ import './game.css';
 // Game component
 const Game = () => {
   // Game hook
-  const [matrix, start, active] = useGame();
+  const [matrix, nextQueue, start, active] = useGame();
 
   // Return
   return (
     <div className="game">
-      <Board matrix={matrix} />
+      <Board matrix={matrix} nextQueue={nextQueue} />
       <div className="controls">
         {active ? null : (<button onClick={start}>Start</button>)}
       </div>

@@ -1,14 +1,36 @@
 .game {
+  display: flex;
   width: inherit;
   height: inherit;
-  display: flex;
 }
 
 .board {
+  display: flex;
   width: fit-content;
   height: fit-content;
   margin: auto;
+}
+
+.matrix {
   border: 2px solid var(--color-black);
+}
+
+.next-queue {
+  display: grid;
+  width: 100px;
+  height: 400px;
+  border: 2px solid var(--color-black);
+  border-left: 0;
+  grid-auto-rows: 1fr;
+}
+
+.next-block {
+  display: flex;
+  border: 1px solid var(--color-black);
+}
+
+.next-shape {
+  margin: auto;
 }
 
 .row {
@@ -21,8 +43,16 @@
   aspect-ratio: 1;
 }
 
+.cell.next {
+  width: 20px;
+}
+
 .cell.E {
   background: var(--color-light-gray);
+}
+
+.cell.E.next {
+  visibility: hidden;
 }
 
 .cell.I {

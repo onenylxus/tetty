@@ -10,7 +10,7 @@ import collides from '../functions/collides';
 import getSevenBag from '../functions/getSevenBag';
 
 // Use game hook
-const useGame = (): [BoardMatrix, () => void, boolean] => {
+const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
   const [active, setActive] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isHardDrop, setIsHardDrop] = useState(false);
@@ -169,7 +169,10 @@ const useGame = (): [BoardMatrix, () => void, boolean] => {
     addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
   }
 
-  return [matrixDisplay, start, active];
+  // Display current next queue
+  const nextQueueDisplay: BlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
+
+  return [matrixDisplay, nextQueueDisplay, start, active];
 };
 
 // Export
