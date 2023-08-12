@@ -47,12 +47,16 @@
   width: 20px;
 }
 
-.cell.E {
+.cell.Empty {
   background: var(--color-light-gray);
 }
 
-.cell.E.next {
+.cell.Empty.next {
   visibility: hidden;
+}
+
+.cell.Ghost {
+  background: var(--color-gray);
 }
 
 .cell.I {

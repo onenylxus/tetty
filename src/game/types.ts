@@ -9,13 +9,14 @@ export enum BlockType {
   Z = 'Z',
 }
 
-// Empty type
-export enum EmptyType {
-  Empty = 'E',
+// Non-block type
+export enum NonBlockType {
+  Empty = 'Empty',
+  Ghost = 'Ghost',
 }
 
 // Cell type
-export type CellType = BlockType | EmptyType;
+export type CellType = BlockType | NonBlockType;
 
 // Shape type
 export type Shape = boolean[][];

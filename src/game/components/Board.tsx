@@ -1,5 +1,5 @@
 // Import
-import { BoardMatrix, CellType, EmptyType } from '../types';
+import { BlockType, BoardMatrix, CellType, NonBlockType } from '../types';
 import Cell from './Cell';
 import Shapes from '../constants/shapes';
 
@@ -14,7 +14,7 @@ const Board = ({ matrix, nextQueue }: Props) => {
   // Fill queue to 5 elements
   const nextQueueDisplay: CellType[] = structuredClone(nextQueue);
   while (nextQueueDisplay.length < 5) {
-    nextQueueDisplay.push(EmptyType.Empty);
+    nextQueueDisplay.push(NonBlockType.Empty);
   }
 
   // Return
@@ -33,11 +33,11 @@ const Board = ({ matrix, nextQueue }: Props) => {
         {nextQueueDisplay.map((block, k) => (
           <div className="next-block" key={`${k}`}>
             <div className="next-shape">
-              {block !== EmptyType.Empty ? (
-                Shapes[block].filter((row) => row.some((cell) => cell)).map((row, j) => (
+              {(Object.values(BlockType) as string[]).includes(block) ? (
+                Shapes[block as BlockType].filter((row) => row.some((cell) => cell)).map((row, j) => (
                   <div className="row" key={`${j}`}>
                     {row.map((cell, i) => (
-                      <Cell cellType={cell ? block : EmptyType.Empty} next={true} key={`${j}-${i}`} />
+                      <Cell cellType={cell ? block : NonBlockType.Empty} next={true} key={`${j}-${i}`} />
                     ))}
                   </div>
                 ))

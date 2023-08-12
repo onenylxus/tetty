@@ -1,13 +1,13 @@
 // Import
 import { useCallback, useEffect, useState } from 'react';
-import { BlockType, BoardMatrix, EmptyType, Rotation } from '../types';
-import useBoard from './useBoard';
-import useInterval from './useInterval';
+import { BlockType, BoardMatrix, NonBlockType, Rotation } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import addShape from '../functions/addShape';
 import collides from '../functions/collides';
 import getSevenBag from '../functions/getSevenBag';
+import useBoard from './useBoard';
+import useInterval from './useInterval';
 
 // Use game hook
 const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
@@ -45,7 +45,7 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
 
     // Clear rows if full
     for (let j = Dimensions.Height - 1; j >= 0; j--) {
-      if (matrixCommit[j].every((cell) => cell !== EmptyType.Empty)) {
+      if (matrixCommit[j].every((cell) => cell !== NonBlockType.Empty)) {
         matrixCommit.splice(j, 1);
       }
     }
@@ -167,6 +167,13 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
   const matrixDisplay: BoardMatrix = structuredClone(matrix);
   if (active) {
     addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
+
+    // Add ghost block
+    let ghostRow = dropRow;
+    while (!collides(matrix, dropShape, ghostRow + 1, dropColumn)) {
+      ghostRow++;
+    }
+    addShape(matrixDisplay, NonBlockType.Ghost, dropShape, ghostRow, dropColumn);
   }
 
   // Display current next queue
