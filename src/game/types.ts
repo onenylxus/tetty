@@ -64,6 +64,7 @@ export type BoardState = {
   dropBlock: BlockType;
   dropShape: Shape;
   dropOrientation: Orientation;
+  isHardDrop: boolean;
 };
 
 // Board action type

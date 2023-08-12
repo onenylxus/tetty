@@ -13,11 +13,10 @@ import useInterval from './useInterval';
 const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
   const [active, setActive] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(-1);
-  const [isHardDrop, setIsHardDrop] = useState(false);
   const [isSliding, setIsSliding] = useState(false);
   const [nextQueue, setNextQueue] = useState<BlockType[]>([]);
 
-  const [{ matrix, dropRow, dropColumn, dropBlock, dropShape }, dispatchBoardState] = useBoard();
+  const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop }, dispatchBoardState] = useBoard();
 
   // Start function
   const start = useCallback(() => {
@@ -65,7 +64,6 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
       setTickSpeed(800);
     }
 
-    setIsHardDrop(false);
     setIsSliding(false);
     setNextQueue(newNextQueue);
     dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
@@ -128,7 +126,6 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
       if (event.code === 'Space') {
         dispatchBoardState({ type: 'move', hardDrop: true });
         setTickSpeed(0);
-        setIsHardDrop(true);
       }
     };
 
@@ -163,17 +160,18 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
     }
   }, tickSpeed);
 
-  // Display current matrix with dropping block
+  // Display current matrix
   const matrixDisplay: BoardMatrix = structuredClone(matrix);
   if (active) {
-    addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
-
     // Add ghost block
     let ghostRow = dropRow;
     while (!collides(matrix, dropShape, ghostRow + 1, dropColumn)) {
       ghostRow++;
     }
     addShape(matrixDisplay, NonBlockType.Ghost, dropShape, ghostRow, dropColumn);
+
+    // Add dropping block
+    addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
   }
 
   // Display current next queue
