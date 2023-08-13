@@ -17,6 +17,7 @@ const initState: BoardState = {
   dropShape: Shapes.I,
   dropOrientation: Orientation.Zero,
   isHardDrop: false,
+  isHold: false,
 };
 
 // Initialize function
@@ -46,6 +47,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         dropShape: Shapes[firstBlock],
         dropOrientation: Orientation.Zero,
         isHardDrop: false,
+        isHold: false,
       };
 
     case 'drop':
@@ -61,19 +63,27 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         dropShape: Shapes[action.next as BlockType],
         dropOrientation: Orientation.Zero,
         isHardDrop: false,
+        isHold: false,
       };
 
     case 'move':
       if (newState.isHardDrop) {
         return newState;
       }
-      if (action.hardDrop) {
+
+      if (action.hold) {
+        newState.dropRow = 0;
+        newState.dropColumn = action.next === BlockType.O ? 4 : 3;
+        newState.dropBlock = action.next as BlockType;
+        newState.dropShape = Shapes[action.next as BlockType];
+        newState.dropOrientation = Orientation.Zero;
+        newState.isHold = true;
+      } else if (action.hardDrop) {
         while (!collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)) {
           newState.dropRow++;
           newState.isHardDrop = true;
         }
-      }
-      else if (action.rotate) {
+      } else if (action.rotate) {
         newShape = rotateShape(newState.dropShape, action.rotate);
         newOrientation = (newState.dropOrientation + action.rotate) % 4;
         srsRotation = action.rotate !== Rotation.Double ? (newState.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8 : 0;

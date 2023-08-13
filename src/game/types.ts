@@ -65,6 +65,7 @@ export type BoardState = {
   dropShape: Shape;
   dropOrientation: Orientation;
   isHardDrop: boolean;
+  isHold: boolean;
 };
 
 // Board action type
@@ -74,6 +75,7 @@ export type BoardAction = {
   moveRight?: boolean;
   rotate?: Rotation;
   hardDrop?: boolean;
+  hold?: boolean;
   matrix?: BoardMatrix;
   next?: BlockType;
 };

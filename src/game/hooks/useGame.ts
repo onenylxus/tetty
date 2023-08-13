@@ -10,13 +10,14 @@ import useBoard from './useBoard';
 import useInterval from './useInterval';
 
 // Use game hook
-const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
+const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, BlockType[]] => {
   const [active, setActive] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isSliding, setIsSliding] = useState(false);
+  const [holdBlock, setHoldBlock] = useState<BlockType | undefined>();
   const [nextQueue, setNextQueue] = useState<BlockType[]>([]);
 
-  const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop }, dispatchBoardState] = useBoard();
+  const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
 
   // Start function
   const start = useCallback(() => {
@@ -127,6 +128,25 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
         dispatchBoardState({ type: 'move', hardDrop: true });
         setTickSpeed(0);
       }
+      if (event.code === 'ShiftLeft') {
+        if (!isHold) {
+          if (holdBlock) {
+            dispatchBoardState({ type: 'move', hold: true, next: holdBlock });
+          } else {
+            // Get hold block from queue if empty
+            const newNextQueue: BlockType[] = structuredClone(nextQueue);
+            const newHold: BlockType = newNextQueue.pop() as BlockType;
+            if (newNextQueue.length < 7) {
+              newNextQueue.unshift(...getSevenBag());
+            }
+
+            setNextQueue(newNextQueue);
+            dispatchBoardState({ type: 'move', hold: true, next: newHold });
+          }
+
+          setHoldBlock(dropBlock);
+        }
+      }
     };
 
     // Key up event
@@ -148,10 +168,11 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
     document.addEventListener('keyup', onkeyup);
 
     return () => {
+      clearInterval(moveIntervalId);
       document.removeEventListener('keydown', onkeydown);
       document.removeEventListener('keyup', onkeyup);
     };
-  }, [active, dispatchBoardState]);
+  }, [active, dispatchBoardState, dropBlock, holdBlock, isHold, nextQueue]);
 
   // Update
   useInterval(() => {
@@ -174,10 +195,10 @@ const useGame = (): [BoardMatrix, BlockType[], () => void, boolean] => {
     addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
   }
 
-  // Display current next queue
   const nextQueueDisplay: BlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
+  const holdBlockDisplay: BlockType | undefined = holdBlock;
 
-  return [matrixDisplay, nextQueueDisplay, start, active];
+  return [start, active, matrixDisplay, holdBlockDisplay, nextQueueDisplay];
 };
 
 // Export
