@@ -4,14 +4,14 @@ import { CellType } from '../types';
 // Cell props
 interface Props {
   cellType: CellType;
-  next?: boolean;
+  mini?: boolean;
 }
 
 // Cell component
-const Cell = ({ cellType, next = false }: Props) => {
+const Cell = ({ cellType, mini }: Props) => {
   // Return
   return (
-    <div className={`cell ${cellType} ${next ? 'next' : ''}`} />
+    <div className={`cell ${cellType} ${mini && 'mini'}`} />
   );
 
 };

@@ -59,7 +59,7 @@
   aspect-ratio: 1;
 }
 
-.cell.next {
+.cell.mini {
   width: 20px;
 }
 
@@ -67,7 +67,7 @@
   background: var(--color-light-gray);
 }
 
-.cell.Empty.next {
+.cell.Empty.mini {
   visibility: hidden;
 }
 

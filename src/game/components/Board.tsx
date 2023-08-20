@@ -1,7 +1,7 @@
 // Import
-import { BlockType, BoardMatrix, NonBlockType } from '../types';
+import { BlockType, BoardMatrix } from '../types';
 import Cell from './Cell';
-import Shapes from '../constants/shapes';
+import MiniShape from './MiniShape';
 
 // Board props
 interface Props {
@@ -18,30 +18,11 @@ const Board = ({ matrix, hold, nextQueue }: Props) => {
     nextQueueDisplay.push(undefined);
   }
 
-  // Generate small shape function
-  const generateSmallShape = (className: string, block: BlockType | undefined) => {
-    return (
-      <div className={className}>
-        {block ? (
-          Shapes[block as BlockType].filter((row) => row.some((cell) => cell)).map((row, j) => (
-            <div className="row" key={`${j}`}>
-              {row.map((cell, i) => (
-                <Cell cellType={cell ? block : NonBlockType.Empty} next={true} key={`${j}-${i}`} />
-              ))}
-            </div>
-          ))
-        ) : (
-          <div></div>
-        )}
-      </div>
-    );
-  };
-
   // Return
   return (
     <div className="board">
       <div className="hold-block">
-        {generateSmallShape("hold-shape", hold)}
+        <MiniShape className="hold-shape" block={hold} />
       </div>
       <div className="matrix">
         {matrix.map((row, j) => (
@@ -53,9 +34,9 @@ const Board = ({ matrix, hold, nextQueue }: Props) => {
         ))}
       </div>
       <div className="next-queue">
-        {nextQueueDisplay.map((block, k) => (
+        {nextQueueDisplay.map((next, k) => (
           <div className="next-block" key={`${k}`}>
-            {generateSmallShape("next-shape", block)}
+            <MiniShape className="next-shape" block={next} />
           </div>
         ))}
       </div>
