@@ -11,8 +11,28 @@
   margin: auto;
 }
 
+.left-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .matrix {
   border: 2px solid var(--color-black);
+}
+
+.hold-text {
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+  text-align: center;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .hold-block {
@@ -25,6 +45,16 @@
 
 .hold-shape {
   margin: auto;
+}
+
+.next-text {
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+  text-align: center;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .next-queue {

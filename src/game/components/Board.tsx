@@ -21,8 +21,11 @@ const Board = ({ matrix, hold, nextQueue }: Props) => {
   // Return
   return (
     <div className="board">
-      <div className="hold-block">
-        <MiniShape className="hold-shape" block={hold} />
+      <div className="left-column">
+        <div className="hold-text">HOLD</div>
+        <div className="hold-block">
+          <MiniShape className="hold-shape" block={hold} />
+        </div>
       </div>
       <div className="matrix">
         {matrix.map((row, j) => (
@@ -33,12 +36,15 @@ const Board = ({ matrix, hold, nextQueue }: Props) => {
           </div>
         ))}
       </div>
-      <div className="next-queue">
-        {nextQueueDisplay.map((next, k) => (
-          <div className="next-block" key={`${k}`}>
-            <MiniShape className="next-shape" block={next} />
-          </div>
-        ))}
+      <div className="right-column">
+        <div className="next-text">NEXT</div>
+        <div className="next-queue">
+          {nextQueueDisplay.map((next, k) => (
+            <div className="next-block" key={`${k}`}>
+              <MiniShape className="next-shape" block={next} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
