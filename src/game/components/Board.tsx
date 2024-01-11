@@ -8,10 +8,11 @@ interface Props {
   matrix: BoardMatrix;
   hold: BlockType | undefined;
   nextQueue: BlockType[];
+  lines: number;
 }
 
 // Board component
-const Board = ({ matrix, hold, nextQueue }: Props) => {
+const Board = ({ matrix, hold, nextQueue, lines }: Props) => {
   // Fill queue to 5 elements
   const nextQueueDisplay: (BlockType | undefined)[] = structuredClone(nextQueue);
   while (nextQueueDisplay.length < 5) {
@@ -25,6 +26,10 @@ const Board = ({ matrix, hold, nextQueue }: Props) => {
         <div className="hold-text">HOLD</div>
         <div className="hold-block">
           <MiniShape className="hold-shape" block={hold} />
+        </div>
+        <div className="lines">
+          <div className="lines-text">LINES</div>
+          <div className="lines-value">{lines}</div>
         </div>
       </div>
       <div className="matrix">

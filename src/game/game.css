@@ -14,6 +14,7 @@
 .left-column {
   display: flex;
   flex-direction: column;
+  text-align: end;
 }
 
 .right-column {
@@ -45,6 +46,22 @@
 
 .hold-shape {
   margin: auto;
+}
+
+.lines {
+  margin-right: 4px;
+  margin-top: auto;
+}
+
+.lines-text {
+  font-size: 18px;
+  line-height: 80%;
+  color: var(--color-black);
+}
+
+.lines-value {
+  font-size: 32px;
+  color: var(--color-black);
 }
 
 .next-text {

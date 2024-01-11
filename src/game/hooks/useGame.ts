@@ -10,18 +10,20 @@ import useBoard from './useBoard';
 import useInterval from './useInterval';
 
 // Use game hook
-const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, BlockType[]] => {
+const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, BlockType[], number] => {
   const [active, setActive] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isSliding, setIsSliding] = useState(false);
   const [holdBlock, setHoldBlock] = useState<BlockType | undefined>();
   const [nextQueue, setNextQueue] = useState<BlockType[]>([]);
+  const [lines, setLines] = useState(0);
 
   const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
 
   // Start function
   const start = useCallback(() => {
     setActive(true);
+    setLines(0);
     setTickSpeed(800);
 
     const firstBag: BlockType[] = getSevenBag();
@@ -44,11 +46,14 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
     addShape(matrixCommit, dropBlock, dropShape, dropRow, dropColumn);
 
     // Clear rows if full
+    let clearedLines: number = 0;
     for (let j = Dimensions.Height - 1; j >= 0; j--) {
       if (matrixCommit[j].every((cell) => cell !== NonBlockType.Empty)) {
+        clearedLines++;
         matrixCommit.splice(j, 1);
       }
     }
+    setLines(lines + clearedLines);
 
     // Update next queue
     const newNextQueue: BlockType[] = structuredClone(nextQueue);
@@ -68,7 +73,7 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
     setIsSliding(false);
     setNextQueue(newNextQueue);
     dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
-  }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, matrix, nextQueue]);
+  }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, lines, matrix, nextQueue]);
 
   const update = useCallback(() => {
     if (isSliding) {
@@ -198,7 +203,7 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
   const nextQueueDisplay: BlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
   const holdBlockDisplay: BlockType | undefined = holdBlock;
 
-  return [start, active, matrixDisplay, holdBlockDisplay, nextQueueDisplay];
+  return [start, active, matrixDisplay, holdBlockDisplay, nextQueueDisplay, lines];
 };
 
 // Export
