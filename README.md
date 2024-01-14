@@ -1,2 +1,2 @@
 # tetty
-Tetris in JavaScript
+Tetris in TypeScript

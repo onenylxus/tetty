@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 Tetty Project Team
+Copyright (c) 2023-2024 Nicholas Ng
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
