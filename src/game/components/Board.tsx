@@ -32,14 +32,19 @@ const Board = ({ matrix, hold, nextQueue, lines }: Props) => {
           <div className="lines-value">{lines}</div>
         </div>
       </div>
-      <div className="matrix">
-        {matrix.map((row, j) => (
-          <div className="row" key={`${j}`}>
-            {row.map((cell, i) => (
-              <Cell cellType={cell} key={`${j}-${i}`} />
-            ))}
-          </div>
-        ))}
+      <div className="center-column">
+        <div className="matrix">
+          {matrix.map((row, j) => (
+            <div className="row" key={`${j}`}>
+              {row.map((cell, i) => (
+                <Cell cellType={cell} key={`${j}-${i}`} />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="player-tag">
+          <div className="player-name">PLAYER</div>
+        </div>
       </div>
       <div className="right-column">
         <div className="next-text">NEXT</div>

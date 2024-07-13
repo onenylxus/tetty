@@ -4,6 +4,12 @@
   height: inherit;
 }
 
+.controls {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
 .board {
   display: flex;
   width: fit-content;
@@ -15,6 +21,11 @@
   display: flex;
   flex-direction: column;
   text-align: end;
+}
+
+.center-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .right-column {
@@ -51,6 +62,7 @@
 .lines {
   margin-right: 4px;
   margin-top: auto;
+  margin-bottom: 20px;
 }
 
 .lines-text {
@@ -62,6 +74,17 @@
 .lines-value {
   font-size: 32px;
   color: var(--color-black);
+}
+
+.player-tag {
+  display: flex;
+  padding: 2px 0;
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.player-name {
+  margin: 0 8px;
 }
 
 .next-text {
