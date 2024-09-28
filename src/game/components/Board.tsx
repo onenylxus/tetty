@@ -2,19 +2,21 @@
 import { BlockType, BoardMatrix } from '../types';
 import Cell from './Cell';
 import MiniShape from './MiniShape';
+import Timer from './Timer';
 
 // Board props
 interface Props {
+  timer: number;
   matrix: BoardMatrix;
   hold: BlockType | undefined;
-  nextQueue: BlockType[];
+  next: BlockType[];
   lines: number;
 }
 
 // Board component
-const Board = ({ matrix, hold, nextQueue, lines }: Props) => {
+const Board = ({ timer, matrix, hold, next, lines }: Props) => {
   // Fill queue to 5 elements
-  const nextQueueDisplay: (BlockType | undefined)[] = structuredClone(nextQueue);
+  const nextQueueDisplay: (BlockType | undefined)[] = structuredClone(next);
   while (nextQueueDisplay.length < 5) {
     nextQueueDisplay.push(undefined);
   }
@@ -41,6 +43,7 @@ const Board = ({ matrix, hold, nextQueue, lines }: Props) => {
               ))}
             </div>
           ))}
+          {timer > 0 && <Timer value={timer} />}
         </div>
         <div className="player-tag">
           <div className="player-name">PLAYER</div>

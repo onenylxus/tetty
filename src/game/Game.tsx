@@ -6,14 +6,14 @@ import './game.css';
 // Game component
 const Game = () => {
   // Game hook
-  const [start, active, matrix, hold, nextQueue, lines] = useGame();
+  const { ready, standby, timer, matrix, hold, next, lines } = useGame();
 
   // Return
   return (
     <div className="game">
-      <Board matrix={matrix} hold={hold} nextQueue={nextQueue} lines={lines} />
+      <Board timer={timer} matrix={matrix} hold={hold} next={next} lines={lines} />
       <div className="controls">
-        {active ? null : (<button onClick={start}>Start</button>)}
+        {!standby && (<button onClick={ready}>Start</button>)}
       </div>
     </div>
   );

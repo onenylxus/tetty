@@ -1,6 +1,6 @@
 // Import
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardMatrix, BoardState, Orientation, Rotation, SRSRotation, Shape } from '../types';
+import { BlockType, BoardAction, BoardMatrix, BoardState, Orientation, Rotation, Shape, SRSRotation } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import SRSOffsets from '../constants/srsOffsets';
@@ -37,6 +37,10 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
   let newOrientation: Orientation;
 
   switch (action.type) {
+    case 'reset':
+      newState.matrix = getEmptyMatrix();
+      break;
+
     case 'start':
       firstBlock = action.next as BlockType;
       return {

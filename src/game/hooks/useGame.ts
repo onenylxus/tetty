@@ -9,9 +9,23 @@ import getSevenBag from '../functions/getSevenBag';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
 
+// Game hook output
+interface UseGameOutput {
+  ready: () => void;
+  standby: boolean;
+  active: boolean;
+  timer: number;
+  matrix: BoardMatrix;
+  hold: BlockType | undefined;
+  next: BlockType[];
+  lines: number;
+}
+
 // Use game hook
-const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, BlockType[], number] => {
+const useGame = (): UseGameOutput => {
+  const [standby, setStandby] = useState(false);
   const [active, setActive] = useState(false);
+  const [timer, setTimer] = useState(0);
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isSliding, setIsSliding] = useState(false);
   const [holdBlock, setHoldBlock] = useState<BlockType | undefined>();
@@ -20,16 +34,16 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
 
   const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
 
-  // Start function
-  const start = useCallback(() => {
-    setActive(true);
+  // Ready function
+  const ready = useCallback(() => {
+    setStandby(true);
+    setActive(false);
+    setTimer(5);
     setLines(0);
+    setHoldBlock(undefined);
+    setNextQueue([]);
     setTickSpeed(800);
-
-    const firstBag: BlockType[] = getSevenBag();
-    const firstBlock: BlockType = firstBag.pop() as BlockType;
-    setNextQueue(firstBag);
-    dispatchBoardState({ type: 'start', next: firstBlock });
+    dispatchBoardState({ type: 'reset' });
   }, [dispatchBoardState]);
 
   // Commit function
@@ -64,6 +78,7 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
 
     // Detect top out
     if (collides(matrixCommit, Shapes[nextBlock], 0, 3)) {
+      setStandby(false);
       setActive(false);
       setTickSpeed(-1);
     } else {
@@ -75,6 +90,7 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
     dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
   }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, lines, matrix, nextQueue]);
 
+  // Update function
   const update = useCallback(() => {
     if (isSliding) {
       commit();
@@ -86,6 +102,20 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
     }
   }, [commit, dispatchBoardState, dropColumn, dropRow, dropShape, matrix, isSliding]);
 
+  useEffect(() => {
+    if (timer > 0) {
+      setTimeout(() => setTimer(Math.max(timer - 1, 0)), 1000);
+    } else if (standby) {
+      setActive(true);
+
+      const firstBag: BlockType[] = getSevenBag();
+      const firstBlock: BlockType = firstBag.pop() as BlockType;
+      setNextQueue(firstBag);
+      dispatchBoardState({ type: 'start', next: firstBlock });
+    }
+  }, [standby, timer, dispatchBoardState]);
+
+  // Check keyboard controls
   useEffect(() => {
     if (!active) {
       return;
@@ -186,7 +216,7 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
     }
   }, tickSpeed);
 
-  // Display current matrix
+  // Set up display results
   const matrixDisplay: BoardMatrix = structuredClone(matrix);
   if (active) {
     // Add ghost block
@@ -203,7 +233,16 @@ const useGame = (): [() => void, boolean, BoardMatrix, BlockType | undefined, Bl
   const nextQueueDisplay: BlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
   const holdBlockDisplay: BlockType | undefined = holdBlock;
 
-  return [start, active, matrixDisplay, holdBlockDisplay, nextQueueDisplay, lines];
+  return {
+    ready,
+    standby,
+    active,
+    timer,
+    matrix: matrixDisplay,
+    hold: holdBlockDisplay,
+    next: nextQueueDisplay,
+    lines,
+  };
 };
 
 // Export

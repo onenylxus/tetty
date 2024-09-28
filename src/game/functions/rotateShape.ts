@@ -1,5 +1,5 @@
 // Import
-import { Shape, Rotation } from '../types';
+import { Rotation, Shape } from '../types';
 
 // Rotate shape function
 const rotateShape = (shape: Shape, rotation: Rotation = Rotation.Right): Shape => {

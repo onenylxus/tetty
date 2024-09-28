@@ -34,7 +34,26 @@
 }
 
 .matrix {
+  position: relative;
   border: 2px solid var(--color-black);
+}
+
+.timer {
+  display: flex;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60px;
+  height: 60px;
+  border: 1px solid var(--color-black);
+  justify-content: center;
+  align-content: center;
+  background: var(--color-white);
+}
+
+.timer-text {
+  margin: auto;
+  font-size: 32px;
 }
 
 .hold-text {
