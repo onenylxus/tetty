@@ -1,10 +1,11 @@
 // Import
 import { useCallback, useEffect, useState } from 'react';
-import { BlockType, BoardMatrix, NonBlockType, Rotation } from '../types';
+import { BlockType, BoardMatrix, DisplayBlockType, NonBlockType, Rotation } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import addShape from '../functions/addShape';
 import collides from '../functions/collides';
+import getEmptyQueue from '../functions/getEmptyQueue';
 import getSevenBag from '../functions/getSevenBag';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
@@ -16,8 +17,8 @@ interface UseGameOutput {
   active: boolean;
   timer: number;
   matrix: BoardMatrix;
-  hold: BlockType | undefined;
-  next: BlockType[];
+  hold: DisplayBlockType;
+  next: DisplayBlockType[];
   lines: number;
 }
 
@@ -28,8 +29,8 @@ const useGame = (): UseGameOutput => {
   const [timer, setTimer] = useState(0);
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isSliding, setIsSliding] = useState(false);
-  const [holdBlock, setHoldBlock] = useState<BlockType | undefined>();
-  const [nextQueue, setNextQueue] = useState<BlockType[]>([]);
+  const [holdBlock, setHoldBlock] = useState<DisplayBlockType>(undefined);
+  const [nextQueue, setNextQueue] = useState<DisplayBlockType[]>(getEmptyQueue());
   const [lines, setLines] = useState(0);
 
   const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
@@ -41,7 +42,7 @@ const useGame = (): UseGameOutput => {
     setTimer(5);
     setLines(0);
     setHoldBlock(undefined);
-    setNextQueue([]);
+    setNextQueue(getEmptyQueue());
     setTickSpeed(800);
     dispatchBoardState({ type: 'reset' });
   }, [dispatchBoardState]);
@@ -70,7 +71,7 @@ const useGame = (): UseGameOutput => {
     setLines(lines + clearedLines);
 
     // Update next queue
-    const newNextQueue: BlockType[] = structuredClone(nextQueue);
+    const newNextQueue: DisplayBlockType[] = structuredClone(nextQueue);
     const nextBlock: BlockType = newNextQueue.pop() as BlockType;
     if (newNextQueue.length < 7) {
       newNextQueue.unshift(...getSevenBag());
@@ -169,7 +170,7 @@ const useGame = (): UseGameOutput => {
             dispatchBoardState({ type: 'move', hold: true, next: holdBlock });
           } else {
             // Get hold block from queue if empty
-            const newNextQueue: BlockType[] = structuredClone(nextQueue);
+            const newNextQueue: DisplayBlockType[] = structuredClone(nextQueue);
             const newHold: BlockType = newNextQueue.pop() as BlockType;
             if (newNextQueue.length < 7) {
               newNextQueue.unshift(...getSevenBag());
@@ -230,8 +231,8 @@ const useGame = (): UseGameOutput => {
     addShape(matrixDisplay, dropBlock, dropShape, dropRow, dropColumn);
   }
 
-  const nextQueueDisplay: BlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
-  const holdBlockDisplay: BlockType | undefined = holdBlock;
+  const holdBlockDisplay: DisplayBlockType = holdBlock;
+  const nextQueueDisplay: DisplayBlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
 
   return {
     ready,

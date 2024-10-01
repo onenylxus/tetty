@@ -9,6 +9,9 @@ export enum BlockType {
   Z = 'Z',
 }
 
+// Display block type
+export type DisplayBlockType = BlockType | undefined;
+
 // Non-block type
 export enum NonBlockType {
   Empty = 'Empty',
