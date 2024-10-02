@@ -1,6 +1,6 @@
 // Import
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardMatrix, BoardState, Orientation, Rotation, Shape, SRSRotation } from '../types';
+import { BlockType, BoardAction, BoardMatrix, BoardState, Matrix, Orientation, Rotation, Shape, SRSRotation } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import SRSOffsets from '../constants/srsOffsets';
@@ -30,7 +30,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
   const newState: BoardState = { ...state };
   let firstBlock: BlockType;
   let srsRotation: SRSRotation;
-  let srsOffsets: number[][];
+  let srsOffsets: Matrix<number>;
   let newRow: number;
   let newColumn: number;
   let newShape: Shape;
@@ -63,8 +63,8 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         matrix: [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix],
         dropRow: 0,
         dropColumn: action.next === BlockType.O ? 4 : 3,
-        dropBlock: action.next as BlockType,
-        dropShape: Shapes[action.next as BlockType],
+        dropBlock: action.next!,
+        dropShape: Shapes[action.next!],
         dropOrientation: Orientation.Zero,
         isHardDrop: false,
         isHold: false,
@@ -78,8 +78,8 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       if (action.hold) {
         newState.dropRow = 0;
         newState.dropColumn = action.next === BlockType.O ? 4 : 3;
-        newState.dropBlock = action.next as BlockType;
-        newState.dropShape = Shapes[action.next as BlockType];
+        newState.dropBlock = action.next!;
+        newState.dropShape = Shapes[action.next!];
         newState.dropOrientation = Orientation.Zero;
         newState.isHold = true;
       } else if (action.hardDrop) {

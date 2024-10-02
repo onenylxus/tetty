@@ -1,29 +1,29 @@
 // Import
-import { SRSOffset, SRSRotation } from '../types';
+import { Matrix, SRSOffset, SRSRotation } from '../types';
 
 // Regular offset constants
-const ROffsetA: number[][] = [
+const ROffsetA: Matrix<number> = [
   [0, 0],
   [0, -1],
   [-1, -1],
   [2, 0],
   [2, -1],
 ];
-const ROffsetB: number[][] = [
+const ROffsetB: Matrix<number> = [
   [0, 0],
   [0, 1],
   [1, 1],
   [-2, 0],
   [-2, 1],
 ];
-const ROffsetC: number[][] = [
+const ROffsetC: Matrix<number> = [
   [0, 0],
   [0, 1],
   [-1, 1],
   [2, 0],
   [2, 1],
 ];
-const ROffsetD: number[][] = [
+const ROffsetD: Matrix<number> = [
   [0, 0],
   [0, -1],
   [1, -1],
@@ -32,28 +32,28 @@ const ROffsetD: number[][] = [
 ];
 
 // I-block offset constants
-const IOffsetA: number[][] = [
+const IOffsetA: Matrix<number> = [
   [0, 0],
   [0, -2],
   [0, 1],
   [1, -2],
   [-2, 1],
 ];
-const IOffsetB: number[][] = [
+const IOffsetB: Matrix<number> = [
   [0, 0],
   [0, 2],
   [0, -1],
   [-1, 2],
   [2, -1],
 ];
-const IOffsetC: number[][] = [
+const IOffsetC: Matrix<number> = [
   [0, 0],
   [0, -1],
   [0, 2],
   [-2, -1],
   [1, 2],
 ];
-const IOffsetD: number[][] = [
+const IOffsetD: Matrix<number> = [
   [0, 0],
   [0, 1],
   [0, -2],
@@ -62,7 +62,7 @@ const IOffsetD: number[][] = [
 ];
 
 // O-block offset constants
-const OOffset: number[][] = [
+const OOffset: Matrix<number> = [
   [0, 0],
 ];
 

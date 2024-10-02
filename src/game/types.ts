@@ -1,3 +1,6 @@
+// Matrix type
+export type Matrix<T> = T[][];
+
 // Block type
 export enum BlockType {
   I = 'I',
@@ -22,7 +25,7 @@ export enum NonBlockType {
 export type CellType = BlockType | NonBlockType;
 
 // Shape type
-export type Shape = boolean[][];
+export type Shape = Matrix<Boolean>;
 
 // Rotation
 export enum Rotation {
@@ -53,11 +56,11 @@ export enum SRSRotation {
 
 // Super Rotation System (SRS) offsets type
 export type SRSOffset = {
-  [key in SRSRotation]: number[][];
+  [key in SRSRotation]: Matrix<number>;
 }
 
 // Board matrix type
-export type BoardMatrix = CellType[][];
+export type BoardMatrix = Matrix<CellType>;
 
 // Board state type
 export type BoardState = {
