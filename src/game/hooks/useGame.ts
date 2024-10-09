@@ -77,18 +77,19 @@ const useGame = (): UseGameOutput => {
       newNextQueue.unshift(...getSevenBag());
     }
 
+    // Reset and commit
+    setIsSliding(false);
+    setNextQueue(newNextQueue);
+    dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
+
     // Detect top out
-    if (collides(matrixCommit, Shapes[nextBlock], 0, 3)) {
+    if (collides(matrixCommit, Shapes[nextBlock], 0, nextBlock === BlockType.O ? 4 : 3)) {
       setStandby(false);
       setActive(false);
       setTickSpeed(-1);
     } else {
       setTickSpeed(800);
     }
-
-    setIsSliding(false);
-    setNextQueue(newNextQueue);
-    dispatchBoardState({ type: 'commit', matrix: matrixCommit, next: nextBlock });
   }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, lines, matrix, nextQueue]);
 
   // Update function
@@ -239,7 +240,7 @@ const useGame = (): UseGameOutput => {
     standby,
     active,
     timer,
-    matrix: matrixDisplay,
+    matrix: matrixDisplay.filter((_, j) => j >= Dimensions.Buffer),
     hold: holdBlockDisplay,
     next: nextQueueDisplay,
     lines,

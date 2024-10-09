@@ -1,6 +1,7 @@
 // Dimensions
+const Buffer = 3;
 const Width = 10;
-const Height = 20; // 24 with buffer
+const Height = 20 + Buffer;
 
 // Export
-export default { Width, Height };
+export default { Buffer, Width, Height };

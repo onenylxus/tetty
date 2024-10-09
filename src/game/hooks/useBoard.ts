@@ -45,7 +45,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       firstBlock = action.next as BlockType;
       return {
         matrix: getEmptyMatrix(),
-        dropRow: 0,
+        dropRow: Dimensions.Buffer,
         dropColumn: firstBlock === BlockType.O ? 4 : 3,
         dropBlock: firstBlock,
         dropShape: Shapes[firstBlock],
@@ -59,16 +59,19 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       break;
 
     case 'commit':
-      return {
-        matrix: [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix],
-        dropRow: 0,
-        dropColumn: action.next === BlockType.O ? 4 : 3,
-        dropBlock: action.next!,
-        dropShape: Shapes[action.next!],
-        dropOrientation: Orientation.Zero,
-        isHardDrop: false,
-        isHold: false,
-      };
+      newState.matrix = [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix];
+      newState.dropRow = Dimensions.Buffer;
+      newState.dropColumn = action.next === BlockType.O ? 4 : 3;
+      newState.dropBlock = action.next!;
+      newState.dropShape = Shapes[action.next!];
+      newState.dropOrientation = Orientation.Zero;
+      newState.isHardDrop = false;
+      newState.isHold = false;
+
+      while (newState.dropRow > 0 && collides(newState.matrix, newState.dropShape, newState.dropRow, newState.dropColumn)) {
+        newState.dropRow--;
+      }
+      break;
 
     case 'move':
       if (newState.isHardDrop) {
@@ -76,7 +79,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       }
 
       if (action.hold) {
-        newState.dropRow = 0;
+        newState.dropRow = Dimensions.Buffer;
         newState.dropColumn = action.next === BlockType.O ? 4 : 3;
         newState.dropBlock = action.next!;
         newState.dropShape = Shapes[action.next!];
