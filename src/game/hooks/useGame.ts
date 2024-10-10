@@ -12,7 +12,6 @@ import useInterval from './useInterval';
 
 // Game hook output
 interface UseGameOutput {
-  ready: () => void;
   standby: boolean;
   active: boolean;
   timer: number;
@@ -20,20 +19,29 @@ interface UseGameOutput {
   hold: DisplayBlockType;
   next: DisplayBlockType[];
   lines: number;
+  cleared: number;
+  combo: number;
+  ready: () => void;
 }
 
 // Use game hook
 const useGame = (): UseGameOutput => {
+  // Activations
   const [standby, setStandby] = useState(false);
   const [active, setActive] = useState(false);
   const [timer, setTimer] = useState(0);
+
+  // Board variables
   const [tickSpeed, setTickSpeed] = useState(-1);
   const [isSliding, setIsSliding] = useState(false);
   const [holdBlock, setHoldBlock] = useState<DisplayBlockType>(undefined);
   const [nextQueue, setNextQueue] = useState<DisplayBlockType[]>(getEmptyQueue());
-  const [lines, setLines] = useState(0);
-
   const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
+
+  // Game statistics
+  const [lines, setLines] = useState(0);
+  const [cleared, setCleared] = useState(0);
+  const [combo, setCombo] = useState(-1);
 
   // Ready function
   const ready = useCallback(() => {
@@ -68,7 +76,11 @@ const useGame = (): UseGameOutput => {
         matrixCommit.splice(j, 1);
       }
     }
+
+    // Update statistics
     setLines(lines + clearedLines);
+    setCleared(clearedLines);
+    setCombo(clearedLines > 0 ? combo + 1 : -1);
 
     // Update next queue
     const newNextQueue: DisplayBlockType[] = structuredClone(nextQueue);
@@ -236,7 +248,6 @@ const useGame = (): UseGameOutput => {
   const nextQueueDisplay: DisplayBlockType[] = structuredClone(nextQueue).reverse().slice(0, 5);
 
   return {
-    ready,
     standby,
     active,
     timer,
@@ -244,6 +255,9 @@ const useGame = (): UseGameOutput => {
     hold: holdBlockDisplay,
     next: nextQueueDisplay,
     lines,
+    cleared,
+    combo,
+    ready,
   };
 };
 

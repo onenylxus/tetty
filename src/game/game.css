@@ -20,6 +20,7 @@
 .left-column {
   display: flex;
   flex-direction: column;
+  align-items: end;
   text-align: end;
 }
 
@@ -78,9 +79,25 @@
   margin: auto;
 }
 
-.lines {
+.message {
   margin-right: 4px;
   margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.message-subtitle {
+  font-size: 18px;
+  line-height: 80%;
+  color: var(--color-black);
+}
+
+.message-title {
+  font-size: 32px;
+  color: var(--color-black);
+}
+
+.lines {
+  margin-right: 4px;
   margin-bottom: 20px;
 }
 

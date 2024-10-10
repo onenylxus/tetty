@@ -11,10 +11,14 @@ interface Props {
   hold: DisplayBlockType;
   next: DisplayBlockType[];
   lines: number;
+  message: string;
 }
 
 // Board component
-const Board = ({ timer, matrix, hold, next, lines }: Props) => {
+const Board = ({ timer, matrix, hold, next, lines, message }: Props) => {
+  // Process message
+  const [title, subtitle] = message.split(';');
+
   // Return
   return (
     <div className="board">
@@ -22,6 +26,10 @@ const Board = ({ timer, matrix, hold, next, lines }: Props) => {
         <div className="hold-text">HOLD</div>
         <div className="hold-block">
           <MiniShape className="hold-shape" block={hold} />
+        </div>
+        <div className="message">
+          <div className="message-subtitle">{subtitle}</div>
+          <div className="message-title">{title}</div>
         </div>
         <div className="lines">
           <div className="lines-text">LINES</div>
