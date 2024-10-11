@@ -1,6 +1,6 @@
 // Import
-import { useCallback, useEffect, useState } from 'react';
 import { BlockType, BoardMatrix, DisplayBlockType, NonBlockType, Rotation } from '../types';
+import { useCallback, useEffect, useState } from 'react';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import addShape from '../functions/addShape';
@@ -21,6 +21,7 @@ interface UseGameOutput {
   lines: number;
   cleared: number;
   combo: number;
+  backToBack: boolean;
   ready: () => void;
 }
 
@@ -36,22 +37,32 @@ const useGame = (): UseGameOutput => {
   const [isSliding, setIsSliding] = useState(false);
   const [holdBlock, setHoldBlock] = useState<DisplayBlockType>(undefined);
   const [nextQueue, setNextQueue] = useState<DisplayBlockType[]>(getEmptyQueue());
-  const [{ matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold }, dispatchBoardState] = useBoard();
+  const [
+    { matrix, dropRow, dropColumn, dropBlock, dropShape, isHardDrop, isHold },
+    dispatchBoardState
+  ] = useBoard();
 
   // Game statistics
   const [lines, setLines] = useState(0);
   const [cleared, setCleared] = useState(0);
+  const [lastCleared, setLastCleared] = useState(0);
   const [combo, setCombo] = useState(-1);
+  const [backToBack, setBackToBack] = useState(false);
 
   // Ready function
   const ready = useCallback(() => {
     setStandby(true);
     setActive(false);
     setTimer(5);
-    setLines(0);
+    setTickSpeed(800);
+    setIsSliding(false);
     setHoldBlock(undefined);
     setNextQueue(getEmptyQueue());
-    setTickSpeed(800);
+    setLines(0);
+    setCleared(0);
+    setLastCleared(0);
+    setCombo(-1);
+    setBackToBack(false);
     dispatchBoardState({ type: 'reset' });
   }, [dispatchBoardState]);
 
@@ -81,6 +92,8 @@ const useGame = (): UseGameOutput => {
     setLines(lines + clearedLines);
     setCleared(clearedLines);
     setCombo(clearedLines > 0 ? combo + 1 : -1);
+    setBackToBack(clearedLines > 0 && clearedLines === 4 && lastCleared === 4);
+    setLastCleared(clearedLines > 0 ? clearedLines : lastCleared);
 
     // Update next queue
     const newNextQueue: DisplayBlockType[] = structuredClone(nextQueue);
@@ -102,7 +115,17 @@ const useGame = (): UseGameOutput => {
     } else {
       setTickSpeed(800);
     }
-  }, [dispatchBoardState, dropBlock, dropColumn, dropRow, dropShape, isHardDrop, lines, matrix, nextQueue]);
+  }, [
+    dispatchBoardState,
+    dropBlock,
+    dropColumn,
+    dropRow,
+    dropShape,
+    isHardDrop,
+    lines,
+    matrix,
+    nextQueue
+  ]);
 
   // Update function
   const update = useCallback(() => {
@@ -257,7 +280,8 @@ const useGame = (): UseGameOutput => {
     lines,
     cleared,
     combo,
-    ready,
+    backToBack,
+    ready
   };
 };
 

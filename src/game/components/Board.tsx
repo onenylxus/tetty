@@ -17,7 +17,7 @@ interface Props {
 // Board component
 const Board = ({ timer, matrix, hold, next, lines, message }: Props) => {
   // Process message
-  const [title, subtitle] = message.split(';');
+  const [title, ...subtitle] = message.split(';');
 
   // Return
   return (
@@ -28,7 +28,9 @@ const Board = ({ timer, matrix, hold, next, lines, message }: Props) => {
           <MiniShape className="hold-shape" block={hold} />
         </div>
         <div className="message">
-          <div className="message-subtitle">{subtitle}</div>
+          {subtitle.map((item) => (
+            <div className="message-subtitle">{item}</div>
+          ))}
           <div className="message-title">{title}</div>
         </div>
         <div className="lines">
@@ -63,7 +65,6 @@ const Board = ({ timer, matrix, hold, next, lines, message }: Props) => {
       </div>
     </div>
   );
-
 };
 
 // Export

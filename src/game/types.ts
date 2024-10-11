@@ -9,7 +9,7 @@ export enum BlockType {
   O = 'O',
   S = 'S',
   T = 'T',
-  Z = 'Z',
+  Z = 'Z'
 }
 
 // Display block type
@@ -18,7 +18,7 @@ export type DisplayBlockType = BlockType | undefined;
 // Non-block type
 export enum NonBlockType {
   Empty = 'Empty',
-  Ghost = 'Ghost',
+  Ghost = 'Ghost'
 }
 
 // Cell type
@@ -31,7 +31,7 @@ export type Shape = Matrix<Boolean>;
 export enum Rotation {
   Right = 1,
   Double,
-  Left,
+  Left
 }
 
 // Orientation
@@ -39,7 +39,7 @@ export enum Orientation {
   Zero,
   Right,
   Double,
-  Left,
+  Left
 }
 
 // Super Rotation System (SRS) rotation
@@ -51,13 +51,13 @@ export enum SRSRotation {
   DoubleToLeft,
   LeftToDouble,
   LeftToZero,
-  ZeroToLeft,
+  ZeroToLeft
 }
 
 // Super Rotation System (SRS) offsets type
 export type SRSOffset = {
   [key in SRSRotation]: Matrix<number>;
-}
+};
 
 // Board matrix type
 export type BoardMatrix = Matrix<CellType>;

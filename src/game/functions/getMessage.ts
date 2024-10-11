@@ -1,5 +1,5 @@
 // Get message function
-const getMessage = (cleared: number, combo: number): string => {
+const getMessage = (cleared: number, combo: number, backToBack: boolean): string => {
   if (cleared === 0) {
     return '';
   }
@@ -23,8 +23,9 @@ const getMessage = (cleared: number, combo: number): string => {
   }
 
   const comboMessage = combo > 0 ? `Combo ${combo}` : '';
+  const backToBackMessage = backToBack ? 'Back-to-Back' : '';
 
-  return `${clearedMessage};${comboMessage}`;
+  return `${clearedMessage};${comboMessage};${backToBackMessage}`;
 };
 
 // Export

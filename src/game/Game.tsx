@@ -7,15 +7,21 @@ import './game.css';
 // Game component
 const Game = () => {
   // Game hook
-  const { ready, standby, timer, matrix, hold, next, lines, cleared, combo } = useGame();
+  const { ready, standby, timer, matrix, hold, next, lines, cleared, combo, backToBack } =
+    useGame();
 
   // Return
   return (
     <div className="game">
-      <Board timer={timer} matrix={matrix} hold={hold} next={next} lines={lines} message={getMessage(cleared, combo)} />
-      <div className="controls">
-        {!standby && (<button onClick={ready}>Start</button>)}
-      </div>
+      <Board
+        timer={timer}
+        matrix={matrix}
+        hold={hold}
+        next={next}
+        lines={lines}
+        message={getMessage(cleared, combo, backToBack)}
+      />
+      <div className="controls">{!standby && <button onClick={ready}>Start</button>}</div>
     </div>
   );
 };

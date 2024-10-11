@@ -10,10 +10,7 @@ interface Props {
 // Cell component
 const Cell = ({ cellType, mini }: Props) => {
   // Return
-  return (
-    <div className={`cell ${cellType} ${mini && 'mini'}`} />
-  );
-
+  return <div className={`cell ${cellType} ${mini && 'mini'}`} />;
 };
 
 // Export

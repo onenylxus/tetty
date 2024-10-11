@@ -1,6 +1,16 @@
 // Import
+import {
+  BlockType,
+  BoardAction,
+  BoardMatrix,
+  BoardState,
+  Matrix,
+  Orientation,
+  Rotation,
+  Shape,
+  SRSRotation
+} from '../types';
 import { Dispatch, useReducer } from 'react';
-import { BlockType, BoardAction, BoardMatrix, BoardState, Matrix, Orientation, Rotation, Shape, SRSRotation } from '../types';
 import Dimensions from '../constants/dimensions';
 import Shapes from '../constants/shapes';
 import SRSOffsets from '../constants/srsOffsets';
@@ -17,7 +27,7 @@ const initState: BoardState = {
   dropShape: Shapes.I,
   dropOrientation: Orientation.Zero,
   isHardDrop: false,
-  isHold: false,
+  isHold: false
 };
 
 // Initialize function
@@ -51,7 +61,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         dropShape: Shapes[firstBlock],
         dropOrientation: Orientation.Zero,
         isHardDrop: false,
-        isHold: false,
+        isHold: false
       };
 
     case 'drop':
@@ -59,7 +69,10 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       break;
 
     case 'commit':
-      newState.matrix = [...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length), ...action.matrix as BoardMatrix];
+      newState.matrix = [
+        ...getEmptyMatrix(Dimensions.Height - (action.matrix as BoardMatrix).length),
+        ...(action.matrix as BoardMatrix)
+      ];
       newState.dropRow = Dimensions.Buffer;
       newState.dropColumn = action.next === BlockType.O ? 4 : 3;
       newState.dropBlock = action.next!;
@@ -68,7 +81,10 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
       newState.isHardDrop = false;
       newState.isHold = false;
 
-      while (newState.dropRow > 0 && collides(newState.matrix, newState.dropShape, newState.dropRow, newState.dropColumn)) {
+      while (
+        newState.dropRow > 0 &&
+        collides(newState.matrix, newState.dropShape, newState.dropRow, newState.dropColumn)
+      ) {
         newState.dropRow--;
       }
       break;
@@ -86,14 +102,19 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         newState.dropOrientation = Orientation.Zero;
         newState.isHold = true;
       } else if (action.hardDrop) {
-        while (!collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)) {
+        while (
+          !collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)
+        ) {
           newState.dropRow++;
           newState.isHardDrop = true;
         }
       } else if (action.rotate) {
         newShape = rotateShape(newState.dropShape, action.rotate);
         newOrientation = (newState.dropOrientation + action.rotate) % 4;
-        srsRotation = action.rotate !== Rotation.Double ? (newState.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8 : 0;
+        srsRotation =
+          action.rotate !== Rotation.Double
+            ? (newState.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8
+            : 0;
         srsOffsets = SRSOffsets[newState.dropBlock][srsRotation];
 
         for (let i = 0; i < srsOffsets.length; i++) {
@@ -112,7 +133,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
           }
         }
       } else {
-        newColumn = newState.dropColumn + (action.moveLeft ? -1 : (action.moveRight ? 1 : 0));
+        newColumn = newState.dropColumn + (action.moveLeft ? -1 : action.moveRight ? 1 : 0);
         if (!collides(newState.matrix, newState.dropShape, newState.dropRow, newColumn)) {
           newState.dropColumn = newColumn;
         }

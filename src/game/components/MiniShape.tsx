@@ -1,7 +1,7 @@
 // Import
 import { BlockType, NonBlockType } from '../types';
-import Shapes from '../constants/shapes';
 import Cell from './Cell';
+import Shapes from '../constants/shapes';
 
 // Mini shape props
 interface Props {
@@ -15,13 +15,15 @@ const MiniShape = ({ className, block }: Props) => {
   return (
     <div className={className}>
       {block ? (
-        Shapes[block as BlockType].filter((row) => row.some((cell) => cell)).map((row, j) => (
-          <div className="row" key={`${j}`}>
-            {row.map((cell, i) => (
-              <Cell cellType={cell ? block : NonBlockType.Empty} mini key={`${j}-${i}`} />
-            ))}
-          </div>
-        ))
+        Shapes[block as BlockType]
+          .filter((row) => row.some((cell) => cell))
+          .map((row, j) => (
+            <div className="row" key={`${j}`}>
+              {row.map((cell, i) => (
+                <Cell cellType={cell ? block : NonBlockType.Empty} mini key={`${j}-${i}`} />
+              ))}
+            </div>
+          ))
       ) : (
         <div></div>
       )}

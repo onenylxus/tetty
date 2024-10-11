@@ -9,7 +9,7 @@ const App = () => {
       <Game />
     </div>
   );
-}
+};
 
 // Export
 export default App;
