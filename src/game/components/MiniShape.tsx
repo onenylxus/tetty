@@ -4,13 +4,13 @@ import Cell from './Cell';
 import Shapes from '../constants/shapes';
 
 // Mini shape props
-interface Props {
+interface MiniShapeProps {
   className: string;
   block: BlockType | undefined;
 }
 
 // Mini shape component
-const MiniShape = ({ className, block }: Props) => {
+const MiniShape = ({ className, block }: MiniShapeProps) => {
   // Return
   return (
     <div className={className}>

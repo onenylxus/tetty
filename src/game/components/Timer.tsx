@@ -1,10 +1,10 @@
 // Timer props
-interface Props {
+interface TimerProps {
   value: number;
 }
 
 // Timer component
-const Timer = ({ value }: Props) => {
+const Timer = ({ value }: TimerProps) => {
   // Return
   return (
     <div className="timer">
