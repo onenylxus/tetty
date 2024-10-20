@@ -114,7 +114,7 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
         srsRotation =
           action.rotate !== Rotation.Double
             ? (newState.dropOrientation * 2 + (action.rotate === Rotation.Left ? 1 : 0) + 7) % 8
-            : 0;
+            : SRSRotation.None;
         srsOffsets = SRSOffsets[newState.dropBlock][srsRotation];
 
         for (let i = 0; i < srsOffsets.length; i++) {

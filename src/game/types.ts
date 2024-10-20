@@ -51,7 +51,8 @@ export enum SRSRotation {
   DoubleToLeft,
   LeftToDouble,
   LeftToZero,
-  ZeroToLeft
+  ZeroToLeft,
+  None
 }
 
 // Super Rotation System (SRS) offsets type

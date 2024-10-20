@@ -61,8 +61,8 @@ const IOffsetD: Matrix<number> = [
   [-1, -2]
 ];
 
-// O-block offset constants
-const OOffset: Matrix<number> = [[0, 0]];
+// No offset constant
+const NoOffset: Matrix<number> = [[0, 0]];
 
 // Regular offsets
 const ROffsets: SRSOffset = {
@@ -73,7 +73,8 @@ const ROffsets: SRSOffset = {
   [SRSRotation.DoubleToLeft]: ROffsetC,
   [SRSRotation.LeftToDouble]: ROffsetD,
   [SRSRotation.LeftToZero]: ROffsetD,
-  [SRSRotation.ZeroToLeft]: ROffsetC
+  [SRSRotation.ZeroToLeft]: ROffsetC,
+  [SRSRotation.None]: NoOffset
 };
 
 // I-block offsets
@@ -85,19 +86,21 @@ const IOffsets: SRSOffset = {
   [SRSRotation.DoubleToLeft]: IOffsetB,
   [SRSRotation.LeftToDouble]: IOffsetA,
   [SRSRotation.LeftToZero]: IOffsetD,
-  [SRSRotation.ZeroToLeft]: IOffsetC
+  [SRSRotation.ZeroToLeft]: IOffsetC,
+  [SRSRotation.None]: NoOffset
 };
 
 // O-block offsets
 const OOffsets: SRSOffset = {
-  [SRSRotation.ZeroToRight]: OOffset,
-  [SRSRotation.RightToZero]: OOffset,
-  [SRSRotation.RightToDouble]: OOffset,
-  [SRSRotation.DoubleToRight]: OOffset,
-  [SRSRotation.DoubleToLeft]: OOffset,
-  [SRSRotation.LeftToDouble]: OOffset,
-  [SRSRotation.LeftToZero]: OOffset,
-  [SRSRotation.ZeroToLeft]: OOffset
+  [SRSRotation.ZeroToRight]: NoOffset,
+  [SRSRotation.RightToZero]: NoOffset,
+  [SRSRotation.RightToDouble]: NoOffset,
+  [SRSRotation.DoubleToRight]: NoOffset,
+  [SRSRotation.DoubleToLeft]: NoOffset,
+  [SRSRotation.LeftToDouble]: NoOffset,
+  [SRSRotation.LeftToZero]: NoOffset,
+  [SRSRotation.ZeroToLeft]: NoOffset,
+  [SRSRotation.None]: NoOffset
 };
 
 // Export
