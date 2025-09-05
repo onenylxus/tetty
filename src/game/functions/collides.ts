@@ -1,13 +1,20 @@
-// Import
 import { BoardMatrix, NonBlockType, Shape } from '../types';
 
-// Collision detection function
-const collides = (
+/**
+ * Checks if a block collides with existing cells in the matrix.
+ *
+ * @param matrix - Current matrix of the board
+ * @param dropShape - Block shape
+ * @param dropRow - Row index of the block
+ * @param dropColumn - Column index of the block
+ * @returns Collision boolean state
+ */
+export default function collides(
   matrix: BoardMatrix,
   dropShape: Shape,
   dropRow: number,
   dropColumn: number
-): boolean => {
+): boolean {
   let result = false;
   dropShape.forEach((row, j) => {
     row.forEach((cell, i) => {
@@ -25,7 +32,4 @@ const collides = (
     });
   });
   return result;
-};
-
-// Export
-export default collides;
+}

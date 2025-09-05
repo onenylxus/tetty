@@ -1,4 +1,3 @@
-// Import
 import { CellType } from '../types';
 
 // Cell props
@@ -7,11 +6,11 @@ interface CellProps {
   mini?: boolean;
 }
 
-// Cell component
-const Cell = ({ cellType, mini }: CellProps) => {
-  // Return
+/**
+ * Cell component displays a square with specific type and size on screen.
+ */
+function Cell({ cellType, mini }: CellProps) {
   return <div className={`cell ${cellType} ${mini && 'mini'}`} />;
-};
+}
 
-// Export
 export default Cell;

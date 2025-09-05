@@ -3,9 +3,10 @@ interface TimerProps {
   value: number;
 }
 
-// Timer component
+/**
+ * Timer component indicates the countdown to the player at the start of a game.
+ */
 const Timer = ({ value }: TimerProps) => {
-  // Return
   return (
     <div className="timer">
       <div className="timer-text">{value}</div>
@@ -13,5 +14,4 @@ const Timer = ({ value }: TimerProps) => {
   );
 };
 
-// Export
 export default Timer;

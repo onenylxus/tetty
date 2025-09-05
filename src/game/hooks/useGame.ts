@@ -1,4 +1,3 @@
-// Import
 import { BlockType, BoardMatrix, DisplayBlockType, NonBlockType, Rotation } from '../types';
 import { useCallback, useEffect, useState } from 'react';
 import Dimensions from '../constants/dimensions';
@@ -10,7 +9,7 @@ import getSevenBag from '../functions/getSevenBag';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
 
-// Game hook output
+// Game hook return
 interface UseGameOutput {
   standby: boolean;
   active: boolean;
@@ -25,8 +24,12 @@ interface UseGameOutput {
   ready: () => void;
 }
 
-// Use game hook
-const useGame = (): UseGameOutput => {
+/**
+ * React hook to manage game states from start to finish.
+ *
+ * @returns Game states
+ */
+export default function useGame(): Readonly<UseGameOutput> {
   // Activations
   const [standby, setStandby] = useState(false);
   const [active, setActive] = useState(false);
@@ -116,12 +119,14 @@ const useGame = (): UseGameOutput => {
       setTickSpeed(800);
     }
   }, [
+    combo,
     dispatchBoardState,
     dropBlock,
     dropColumn,
     dropRow,
     dropShape,
     isHardDrop,
+    lastCleared,
     lines,
     matrix,
     nextQueue
@@ -283,7 +288,4 @@ const useGame = (): UseGameOutput => {
     backToBack,
     ready
   };
-};
-
-// Export
-export default useGame;
+}

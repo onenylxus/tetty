@@ -1,8 +1,13 @@
-// Import
 import { Rotation, Shape } from '../types';
 
-// Rotate shape function
-const rotateShape = (shape: Shape, rotation: Rotation = Rotation.Right): Shape => {
+/**
+ * Rotates a shape with given rotation.
+ *
+ * @param shape - Initial block shape
+ * @param rotation - Rotation enum value
+ * @returns Block shape after rotation
+ */
+export default function rotateShape(shape: Shape, rotation: Rotation = Rotation.Right): Shape {
   const rows: number = shape.length;
   const columns: number = shape[0].length;
   const rotatedShape: Shape = Array(rows)
@@ -26,7 +31,4 @@ const rotateShape = (shape: Shape, rotation: Rotation = Rotation.Right): Shape =
   }
 
   return rotatedShape;
-};
-
-// Export
-export default rotateShape;
+}

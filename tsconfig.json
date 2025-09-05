@@ -1,8 +1,9 @@
 {
+  "include": ["src"],
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -19,6 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

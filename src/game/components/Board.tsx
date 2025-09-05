@@ -1,4 +1,3 @@
-// Import
 import { BoardMatrix, DisplayBlockType } from '../types';
 import Cell from './Cell';
 import MiniShape from './MiniShape';
@@ -32,8 +31,10 @@ interface BoardProps {
   message: string;
 }
 
-// Left column component
-const LeftColumn = ({ hold, lines, message }: LeftColumnProps) => {
+/**
+ * Left column component consists of hold space at top left and statistics placed at bottom left.
+ */
+function LeftColumn({ hold, lines, message }: LeftColumnProps) {
   // Process message
   const [title, ...subtitle] = message.split(';');
 
@@ -55,10 +56,13 @@ const LeftColumn = ({ hold, lines, message }: LeftColumnProps) => {
       </div>
     </div>
   );
-};
+}
 
-// Center column component
-const CenterColumn = ({ timer, matrix }: CenterColumnProps) => {
+/**
+ * Center column component consists of the board and player tag below the board. A countdown timer
+ * is displayed on top of the board when necessary.
+ */
+function CenterColumn({ timer, matrix }: CenterColumnProps) {
   return (
     <div className="center-column">
       <div className="matrix">
@@ -76,10 +80,12 @@ const CenterColumn = ({ timer, matrix }: CenterColumnProps) => {
       </div>
     </div>
   );
-};
+}
 
-// Right column component
-const RightColumn = ({ next }: RightColumnProps) => {
+/**
+ * Right column component consists of next queue at top right and statistics placed at bottom right.
+ */
+function RightColumn({ next }: RightColumnProps) {
   return (
     <div className="right-column">
       <div className="next-text">NEXT</div>
@@ -92,11 +98,12 @@ const RightColumn = ({ next }: RightColumnProps) => {
       </div>
     </div>
   );
-};
+}
 
-// Board component
-const Board = ({ timer, matrix, hold, next, lines, message }: BoardProps) => {
-  // Return
+/**
+ * The board component is the main controllable component of a game.
+ */
+function Board({ timer, matrix, hold, next, lines, message }: BoardProps) {
   return (
     <div className="board">
       {LeftColumn({ hold, lines, message })}
@@ -104,7 +111,6 @@ const Board = ({ timer, matrix, hold, next, lines, message }: BoardProps) => {
       {RightColumn({ next })}
     </div>
   );
-};
+}
 
-// Export
 export default Board;

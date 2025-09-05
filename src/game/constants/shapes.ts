@@ -1,4 +1,3 @@
-// Import
 import { Shape } from '../types';
 
 // Conventions
@@ -54,7 +53,6 @@ const ZShape: Shape = [
   [F, F, F]
 ];
 
-// Export
 export default {
   I: IShape,
   J: JShape,

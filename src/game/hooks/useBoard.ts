@@ -1,4 +1,3 @@
-// Import
 import {
   BlockType,
   BoardAction,
@@ -18,7 +17,7 @@ import collides from '../functions/collides';
 import getEmptyMatrix from '../functions/getEmptyMatrix';
 import rotateShape from '../functions/rotateShape';
 
-// Initialize argument
+// Initialize arguments
 const initState: BoardState = {
   matrix: [],
   dropRow: 0,
@@ -30,13 +29,24 @@ const initState: BoardState = {
   isHold: false
 };
 
-// Initialize function
-const initFn = (emptyState: BoardState): BoardState => {
+/**
+ * Initializes the board with an empty matrix.
+ *
+ * @param emptyState - Initial board state
+ * @returns Board state after initialization
+ */
+function initFn(emptyState: BoardState): BoardState {
   return { ...emptyState, matrix: getEmptyMatrix() };
-};
+}
 
-// Board reducer
-const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
+/**
+ * Board reducer manages board state and accepts board actions from the player.
+ *
+ * @param state - Initial board state
+ * @param action - Board action from the player
+ * @returns Final board state
+ */
+function boardReducer(state: BoardState, action: BoardAction): BoardState {
   const newState: BoardState = { ...state };
   let firstBlock: BlockType;
   let srsRotation: SRSRotation;
@@ -145,13 +155,14 @@ const boardReducer = (state: BoardState, action: BoardAction): BoardState => {
   }
 
   return newState;
-};
+}
 
-// Use board hook
-const useBoard = (): [BoardState, Dispatch<BoardAction>] => {
+/**
+ * React hook for managing the board state.
+ *
+ * @returns Getter and setter of the board state.
+ */
+export default function useBoard(): [BoardState, Dispatch<BoardAction>] {
   const [boardState, dispatchBoardState] = useReducer(boardReducer, initState, initFn);
   return [boardState, dispatchBoardState];
-};
-
-// Export
-export default useBoard;
+}

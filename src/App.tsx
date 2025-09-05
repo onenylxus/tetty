@@ -1,9 +1,9 @@
-// Import
 import Game from './game/Game';
 
-// Main application
+/**
+ * Application component is the entrypoint of the site.
+ */
 const App = () => {
-  // Return
   return (
     <div className="App">
       <Game />
@@ -11,5 +11,4 @@ const App = () => {
   );
 };
 
-// Export
 export default App;

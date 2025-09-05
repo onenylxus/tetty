@@ -1,17 +1,18 @@
-// Import
-import { BlockType, NonBlockType } from '../types';
+import { BlockType, DisplayBlockType, NonBlockType } from '../types';
 import Cell from './Cell';
 import Shapes from '../constants/shapes';
 
 // Mini shape props
 interface MiniShapeProps {
   className: string;
-  block: BlockType | undefined;
+  block: DisplayBlockType;
 }
 
-// Mini shape component
-const MiniShape = ({ className, block }: MiniShapeProps) => {
-  // Return
+/**
+ * Blocks in hold space and next queue are smaller than that in the board. Mini shape component
+ * displays blocks in a smaller size.
+ */
+function MiniShape({ className, block }: MiniShapeProps) {
   return (
     <div className={className}>
       {block ? (
@@ -29,7 +30,6 @@ const MiniShape = ({ className, block }: MiniShapeProps) => {
       )}
     </div>
   );
-};
+}
 
-// Export
 export default MiniShape;

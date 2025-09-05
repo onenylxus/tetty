@@ -1,4 +1,3 @@
-// Import
 import { Matrix, SRSOffset, SRSRotation } from '../types';
 
 // Regular offset constants
@@ -103,7 +102,6 @@ const OOffsets: SRSOffset = {
   [SRSRotation.None]: NoOffset
 };
 
-// Export
 export default {
   I: IOffsets,
   J: ROffsets,
