@@ -6,6 +6,7 @@ import Timer from './Timer';
 // Left column props
 interface LeftColumnProps {
   hold: DisplayBlockType;
+  level: number;
   lines: number;
   message: string;
 }
@@ -27,6 +28,7 @@ interface BoardProps {
   matrix: BoardMatrix;
   hold: DisplayBlockType;
   next: DisplayBlockType[];
+  level: number;
   lines: number;
   message: string;
 }
@@ -34,7 +36,7 @@ interface BoardProps {
 /**
  * Left column component consists of hold space at top left and statistics placed at bottom left.
  */
-function LeftColumn({ hold, lines, message }: LeftColumnProps) {
+function LeftColumn({ hold, level, lines, message }: LeftColumnProps) {
   // Process message
   const [title, ...subtitle] = message.split(';');
 
@@ -49,6 +51,10 @@ function LeftColumn({ hold, lines, message }: LeftColumnProps) {
           <div className="message-subtitle">{item}</div>
         ))}
         <div className="message-title">{title}</div>
+      </div>
+      <div className="level">
+        <div className="level-text">LEVEL</div>
+        <div className="level-value">{level}</div>
       </div>
       <div className="lines">
         <div className="lines-text">LINES</div>
@@ -103,10 +109,10 @@ function RightColumn({ next }: RightColumnProps) {
 /**
  * The board component is the main controllable component of a game.
  */
-function Board({ timer, matrix, hold, next, lines, message }: BoardProps) {
+function Board({ timer, matrix, hold, next, level, lines, message }: BoardProps) {
   return (
     <div className="board">
-      {LeftColumn({ hold, lines, message })}
+      {LeftColumn({ hold, level, lines, message })}
       {CenterColumn({ timer, matrix })}
       {RightColumn({ next })}
     </div>

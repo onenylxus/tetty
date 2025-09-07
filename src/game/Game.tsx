@@ -7,7 +7,7 @@ import './game.css';
  * Game component consists of player boards and external controls.
  */
 export default function Game() {
-  const { ready, standby, timer, matrix, hold, next, lines, cleared, combo, backToBack } =
+  const { ready, standby, timer, matrix, hold, next, level, lines, cleared, combo, backToBack } =
     useGame();
 
   return (
@@ -17,6 +17,7 @@ export default function Game() {
         matrix={matrix}
         hold={hold}
         next={next}
+        level={level}
         lines={lines}
         message={getMessage(cleared, combo, backToBack)}
       />

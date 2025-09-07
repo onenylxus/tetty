@@ -8,6 +8,7 @@ import getEmptyQueue from '../functions/getEmptyQueue';
 import getSevenBag from '../functions/getSevenBag';
 import useBoard from './useBoard';
 import useInterval from './useInterval';
+import getGravity from '../functions/getGravity';
 
 // Game hook return
 interface UseGameOutput {
@@ -17,6 +18,7 @@ interface UseGameOutput {
   matrix: BoardMatrix;
   hold: DisplayBlockType;
   next: DisplayBlockType[];
+  level: number;
   lines: number;
   cleared: number;
   combo: number;
@@ -46,6 +48,7 @@ export default function useGame(): Readonly<UseGameOutput> {
   ] = useBoard();
 
   // Game statistics
+  const [level, setLevel] = useState(1);
   const [lines, setLines] = useState(0);
   const [cleared, setCleared] = useState(0);
   const [lastCleared, setLastCleared] = useState(0);
@@ -54,26 +57,27 @@ export default function useGame(): Readonly<UseGameOutput> {
 
   // Ready function
   const ready = useCallback(() => {
+    dispatchBoardState({ type: 'reset' });
     setStandby(true);
     setActive(false);
     setTimer(5);
-    setTickSpeed(800);
+    setTickSpeed(getGravity(1));
     setIsSliding(false);
     setHoldBlock(undefined);
     setNextQueue(getEmptyQueue());
+    setLevel(1);
     setLines(0);
     setCleared(0);
     setLastCleared(0);
     setCombo(-1);
     setBackToBack(false);
-    dispatchBoardState({ type: 'reset' });
   }, [dispatchBoardState]);
 
   // Commit function
   const commit = useCallback(() => {
     // Leave sliding state except hard drop action performed
     if (!isHardDrop && !collides(matrix, dropShape, dropRow + 1, dropColumn)) {
-      setTickSpeed(800);
+      setTickSpeed(getGravity(level));
       setIsSliding(false);
       return;
     }
@@ -90,9 +94,12 @@ export default function useGame(): Readonly<UseGameOutput> {
         matrixCommit.splice(j, 1);
       }
     }
+    const newLines = lines + clearedLines;
+    const newLevel = Math.min(Math.floor(newLines / 10) + 1, 20);
 
     // Update statistics
-    setLines(lines + clearedLines);
+    setLevel(newLevel);
+    setLines(newLines);
     setCleared(clearedLines);
     setCombo(clearedLines > 0 ? combo + 1 : -1);
     setBackToBack(clearedLines > 0 && clearedLines === 4 && lastCleared === 4);
@@ -116,7 +123,7 @@ export default function useGame(): Readonly<UseGameOutput> {
       setActive(false);
       setTickSpeed(-1);
     } else {
-      setTickSpeed(800);
+      setTickSpeed(getGravity(newLevel));
     }
   }, [
     combo,
@@ -127,6 +134,7 @@ export default function useGame(): Readonly<UseGameOutput> {
     dropShape,
     isHardDrop,
     lastCleared,
+    level,
     lines,
     matrix,
     nextQueue
@@ -137,13 +145,14 @@ export default function useGame(): Readonly<UseGameOutput> {
     if (isSliding) {
       commit();
     } else if (collides(matrix, dropShape, dropRow + 1, dropColumn)) {
-      setTickSpeed(100);
+      setTickSpeed(Math.max(getGravity(level), 100));
       setIsSliding(true);
     } else {
       dispatchBoardState({ type: 'drop' });
     }
-  }, [commit, dispatchBoardState, dropColumn, dropRow, dropShape, matrix, isSliding]);
+  }, [commit, dispatchBoardState, dropColumn, dropRow, dropShape, isSliding, level, matrix]);
 
+  // Set countdown timer and start game
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => setTimer(Math.max(timer - 1, 0)), 1000);
@@ -199,11 +208,12 @@ export default function useGame(): Readonly<UseGameOutput> {
         dispatchBoardState({ type: 'move', rotate: Rotation.Double });
       }
       if (event.code === 'ArrowDown') {
-        setTickSpeed(50);
+        setTickSpeed(Math.min(getGravity(level) / 10, 50));
       }
       if (event.code === 'Space') {
         dispatchBoardState({ type: 'move', hardDrop: true });
         setTickSpeed(0);
+        setIsSliding(true);
       }
       if (event.code === 'ShiftLeft') {
         if (!isHold) {
@@ -237,7 +247,7 @@ export default function useGame(): Readonly<UseGameOutput> {
         updateMoveInterval();
       }
       if (event.code === 'ArrowDown') {
-        setTickSpeed(800);
+        setTickSpeed(getGravity(level));
       }
     };
 
@@ -282,6 +292,7 @@ export default function useGame(): Readonly<UseGameOutput> {
     matrix: matrixDisplay.filter((_, j) => j >= Dimensions.Buffer),
     hold: holdBlockDisplay,
     next: nextQueueDisplay,
+    level,
     lines,
     cleared,
     combo,
