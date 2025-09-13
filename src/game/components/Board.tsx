@@ -6,6 +6,7 @@ import Timer from './Timer';
 // Left column props
 interface LeftColumnProps {
   hold: DisplayBlockType;
+  level: number;
   lines: number;
   message: string;
 }
@@ -19,6 +20,7 @@ interface CenterColumnProps {
 // Right column props
 interface RightColumnProps {
   next: DisplayBlockType[];
+  score: number;
 }
 
 // Board props
@@ -27,14 +29,16 @@ interface BoardProps {
   matrix: BoardMatrix;
   hold: DisplayBlockType;
   next: DisplayBlockType[];
+  level: number;
   lines: number;
+  score: number;
   message: string;
 }
 
 /**
  * Left column component consists of hold space at top left and statistics placed at bottom left.
  */
-function LeftColumn({ hold, lines, message }: LeftColumnProps) {
+function LeftColumn({ hold, level, lines, message }: LeftColumnProps) {
   // Process message
   const [title, ...subtitle] = message.split(';');
 
@@ -49,6 +53,10 @@ function LeftColumn({ hold, lines, message }: LeftColumnProps) {
           <div className="message-subtitle">{item}</div>
         ))}
         <div className="message-title">{title}</div>
+      </div>
+      <div className="level">
+        <div className="level-text">LEVEL</div>
+        <div className="level-value">{level}</div>
       </div>
       <div className="lines">
         <div className="lines-text">LINES</div>
@@ -85,7 +93,7 @@ function CenterColumn({ timer, matrix }: CenterColumnProps) {
 /**
  * Right column component consists of next queue at top right and statistics placed at bottom right.
  */
-function RightColumn({ next }: RightColumnProps) {
+function RightColumn({ next, score }: RightColumnProps) {
   return (
     <div className="right-column">
       <div className="next-text">NEXT</div>
@@ -96,6 +104,10 @@ function RightColumn({ next }: RightColumnProps) {
           </div>
         ))}
       </div>
+      <div className="score">
+        <div className="score-text">SCORE</div>
+        <div className="score-value">{score}</div>
+      </div>
     </div>
   );
 }
@@ -103,12 +115,12 @@ function RightColumn({ next }: RightColumnProps) {
 /**
  * The board component is the main controllable component of a game.
  */
-function Board({ timer, matrix, hold, next, lines, message }: BoardProps) {
+function Board({ timer, matrix, hold, next, level, lines, score, message }: BoardProps) {
   return (
     <div className="board">
-      {LeftColumn({ hold, lines, message })}
+      {LeftColumn({ hold, level, lines, message })}
       {CenterColumn({ timer, matrix })}
-      {RightColumn({ next })}
+      {RightColumn({ next, score })}
     </div>
   );
 }

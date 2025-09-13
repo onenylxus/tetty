@@ -96,6 +96,22 @@
   color: var(--color-black);
 }
 
+.level {
+  margin-right: 4px;
+  margin-bottom: 20px;
+}
+
+.level-text {
+  font-size: 18px;
+  line-height: 80%;
+  color: var(--color-black);
+}
+
+.level-value {
+  font-size: 32px;
+  color: var(--color-black);
+}
+
 .lines {
   margin-right: 4px;
   margin-bottom: 20px;
@@ -153,6 +169,23 @@
 
 .next-shape {
   margin: auto;
+}
+
+.score {
+  margin-left: 4px;
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.score-text {
+  font-size: 18px;
+  line-height: 80%;
+  color: var(--color-black);
+}
+
+.score-value {
+  font-size: 32px;
+  color: var(--color-black);
 }
 
 .row {

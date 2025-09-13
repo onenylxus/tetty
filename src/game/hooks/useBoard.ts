@@ -26,7 +26,8 @@ const initState: BoardState = {
   dropShape: Shapes.I,
   dropOrientation: Orientation.Zero,
   isHardDrop: false,
-  isHold: false
+  isHold: false,
+  hardDropRows: 0
 };
 
 /**
@@ -71,7 +72,8 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
         dropShape: Shapes[firstBlock],
         dropOrientation: Orientation.Zero,
         isHardDrop: false,
-        isHold: false
+        isHold: false,
+        hardDropRows: 0
       };
 
     case 'drop':
@@ -90,6 +92,7 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
       newState.dropOrientation = Orientation.Zero;
       newState.isHardDrop = false;
       newState.isHold = false;
+      newState.hardDropRows = 0;
 
       while (
         newState.dropRow > 0 &&
@@ -116,6 +119,7 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
           !collides(newState.matrix, newState.dropShape, newState.dropRow + 1, newState.dropColumn)
         ) {
           newState.dropRow++;
+          newState.hardDropRows++;
           newState.isHardDrop = true;
         }
       } else if (action.rotate) {
