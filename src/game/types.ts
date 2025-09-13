@@ -104,6 +104,7 @@ export interface BoardState {
   dropOrientation: Orientation;
   isHardDrop: boolean;
   isHold: boolean;
+  hardDropRows: number;
 }
 
 /**

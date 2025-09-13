@@ -37,7 +37,8 @@ export default defineConfig([
       reportUnusedDisableDirectives: true
     },
     rules: {
-      'react-refresh/only-export-components': 'warn'
+      'react-refresh/only-export-components': 'warn',
+      'react-hooks/exhaustive-deps': 'warn'
     }
   }
 ]);

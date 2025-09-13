@@ -20,6 +20,7 @@ interface CenterColumnProps {
 // Right column props
 interface RightColumnProps {
   next: DisplayBlockType[];
+  score: number;
 }
 
 // Board props
@@ -30,6 +31,7 @@ interface BoardProps {
   next: DisplayBlockType[];
   level: number;
   lines: number;
+  score: number;
   message: string;
 }
 
@@ -91,7 +93,7 @@ function CenterColumn({ timer, matrix }: CenterColumnProps) {
 /**
  * Right column component consists of next queue at top right and statistics placed at bottom right.
  */
-function RightColumn({ next }: RightColumnProps) {
+function RightColumn({ next, score }: RightColumnProps) {
   return (
     <div className="right-column">
       <div className="next-text">NEXT</div>
@@ -102,6 +104,10 @@ function RightColumn({ next }: RightColumnProps) {
           </div>
         ))}
       </div>
+      <div className="score">
+        <div className="score-text">SCORE</div>
+        <div className="score-value">{score}</div>
+      </div>
     </div>
   );
 }
@@ -109,12 +115,12 @@ function RightColumn({ next }: RightColumnProps) {
 /**
  * The board component is the main controllable component of a game.
  */
-function Board({ timer, matrix, hold, next, level, lines, message }: BoardProps) {
+function Board({ timer, matrix, hold, next, level, lines, score, message }: BoardProps) {
   return (
     <div className="board">
       {LeftColumn({ hold, level, lines, message })}
       {CenterColumn({ timer, matrix })}
-      {RightColumn({ next })}
+      {RightColumn({ next, score })}
     </div>
   );
 }
