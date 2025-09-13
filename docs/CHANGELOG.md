@@ -1,5 +1,18 @@
 # Changelog
 
+### v0.3.0 (Sep 13, 2025)
+
+- Added core features
+  - Marathon mode: variable gravity based on level
+- Added extra features
+  - Scoring system
+- Updated board layout
+  - Hold and next text
+  - Number of cleared lines
+  - Line clear message
+  - Countdown timer on start
+- Fixed bugs
+
 ### v0.2.0 (Aug 13, 2023)
 
 - Added core features
